@@ -1,0 +1,759 @@
+/* CodeCamp: Bridgerland - Enhanced 8-bit CSS with improved legibility */
+
+/* ======= Font imports - additional 8-bit style fonts ======= */
+@import url('https://fonts.googleapis.com/css2?family=Handjet:wght@500..900&family=Silkscreen:wght@400;700&display=swap');
+
+/* ======= Variables and root styles ======= */
+:root {
+  /* Core colors with high contrast */
+  --primary: #FF0066;      /* Vibrant pink */
+  --secondary: #00FFCC;    /* Bright aqua */
+  --dark: #0A0A1E;         /* Deep midnight blue */
+  --darker: #050510;       /* Even darker blue for layering */
+  --light: #F0F0FF;        /* Light purple tint */
+  --accent: #FFCC00;       /* Golden yellow */
+  --card-bg: #12123D;      /* Dark blue card background */
+  --text-bright: #FFFFFF;  /* White text */
+  --text-shadow: #000000;  /* Shadow color */
+  
+  /* Font families for different elements */
+  --heading-font: 'Silkscreen', 'Press Start 2P', monospace;
+  --body-font: "Handjet", sans-serif;
+  --accent-font: 'Press Start 2P', monospace;
+  
+  /* Font sizes that scale well */
+  --font-xs: 0.7rem;
+  --font-sm: 0.9rem;
+  --font-base: 1.35rem; 
+  --font-lg: 1.5rem;
+  --font-xl: 2rem;
+  --font-2xl: 2.5rem;
+  
+  /* Layout variables */
+  --container-width: 90%;
+  --max-width: 1200px;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  
+  /* Animation timings */
+  --transition-fast: 0.2s;
+  --transition-medium: 0.4s;
+}
+
+/* ======= Base styles ======= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Disable font smoothing for pixelated aesthetic */
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: grayscale;
+  font-smooth: never;
+}
+
+body {
+  font-family: var(--body-font);
+  font-size: var(--font-base);
+  background-color: var(--dark);
+  color: var(--text-bright);
+  font-weight: 500;
+  line-height: 1.6;
+  overflow-x: hidden;
+  
+  /* Retro grid background */
+  background-image: 
+    linear-gradient(rgba(0, 100, 200, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 100, 200, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+p {
+  margin-bottom: var(--spacing-md);
+  /* Improve text legibility with increased line height */
+  line-height: 1.7;
+  /* Add very subtle shadow for better contrast */
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7);
+  /* Slightly increased letter spacing for better legibility */
+  letter-spacing: 0.02em;
+}
+
+/* Improved heading legibility */
+h1, h2, h3, h4 {
+  font-family: var(--heading-font);
+  font-weight: 700;
+  margin-bottom: var(--spacing-md);
+  /* Add pixel-styled shadow for depth */
+  text-shadow: 2px 2px 0 var(--text-shadow);
+  /* Improve letter spacing for better readability */
+  letter-spacing: 0.05em;
+  /* Add slightly more line height for better readability */
+  line-height: 1.4;
+}
+
+/* Adjust specific heading sizes for better legibility */
+h1 {
+  font-size: 2.2rem;
+}
+
+h2 {
+  font-size: 1.8rem;
+}
+
+h3 {
+  font-size: 1.6rem;
+}
+
+h4 {
+  font-size: 1.4rem;
+}
+
+/* Use Silkscreen for main headings - more legible than Press Start 2P */
+.pixel-font {
+  font-family: 'Silkscreen', monospace;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+}
+
+a {
+  color: var(--text-bright);
+  text-decoration: none;
+  transition: color var(--transition-fast), text-shadow var(--transition-fast);
+}
+
+a:hover {
+  color: var(--primary);
+  /* Add glow effect on hover */
+  text-shadow: 0 0 8px rgba(255, 0, 102, 0.6);
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.highlight {
+  color: var(--secondary);
+  text-shadow: 0 0 8px rgba(0, 255, 204, 0.4);
+}
+
+.container {
+  width: var(--container-width);
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-padding {
+  padding: var(--spacing-xl) 0;
+}
+
+/* Common spacing utilities */
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+.mb-10 { margin-bottom: 2.5rem; }
+.mt-12 { margin-top: 3rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.max-w-3xl { max-width: 48rem; }
+.text-center { text-align: center; }
+
+/* ======= Pixel Art Effects ======= */
+/* Pixel corners for buttons and cards */
+.pixel-corners {
+  /* Pixel-perfect corners using clip-path */
+  clip-path: 
+    polygon(
+      0px 8px,
+      4px 8px,
+      4px 4px,
+      8px 4px,
+      8px 0px,
+      calc(100% - 8px) 0px,
+      calc(100% - 8px) 4px,
+      calc(100% - 4px) 4px,
+      calc(100% - 4px) 8px,
+      100% 8px,
+      100% calc(100% - 8px),
+      calc(100% - 4px) calc(100% - 8px),
+      calc(100% - 4px) calc(100% - 4px),
+      calc(100% - 8px) calc(100% - 4px),
+      calc(100% - 8px) 100%,
+      8px 100%,
+      8px calc(100% - 4px),
+      4px calc(100% - 4px),
+      4px calc(100% - 8px),
+      0px calc(100% - 8px)
+    );
+}
+
+/* Enhanced scanline effect - more visible but still subtle */
+.scanline {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 0, 0, 0.15) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Improved glitch text animation */
+.glitch-text {
+  position: relative;
+  animation: glitch 5s infinite;
+}
+
+@keyframes glitch {
+  0%, 91%, 93%, 95%, 97%, 99%, 100% {
+    transform: translate(0);
+    text-shadow: 0 0 0 transparent;
+  }
+  90%, 94% {
+    transform: translate(-2px, 1px);
+    text-shadow: -2px 0 var(--primary);
+  }
+  92%, 96% {
+    transform: translate(2px, -1px);
+    text-shadow: 2px 0 var(--secondary);
+  }
+  98% {
+    transform: translate(-2px, -1px);
+    text-shadow: 2px 0 var(--accent);
+  }
+}
+
+/* Enhanced glow text effect */
+.glow-text {
+  text-shadow: 
+    0 0 5px var(--secondary),
+    0 0 10px rgba(0, 255, 204, 0.5);
+}
+
+/* Pixel gradient divider */
+.pixel-gradient {
+  height: 4px;
+  width: 200px;
+  margin: 0 auto var(--spacing-lg);
+  background-image: linear-gradient(
+    to right,
+    var(--primary) 25%,
+    var(--secondary) 25%,
+    var(--secondary) 50%,
+    var(--accent) 50%,
+    var(--accent) 75%,
+    var(--primary) 75%
+  );
+}
+
+/* Dark section styling */
+.dark-section {
+  background-color: var(--darker);
+  position: relative;
+}
+
+/* ======= Header and Navigation ======= */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: var(--dark);
+  border-bottom: 4px solid;
+  border-image: linear-gradient(90deg, var(--primary), var(--secondary)) 1;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) 0;
+}
+
+/* Logo styling with better contrast */
+.logo h1 {
+  font-family: var(--heading-font);
+  font-size: var(--font-sm);
+  color: var(--secondary);
+  margin-bottom: 0;
+  letter-spacing: 0.05em; /* Slightly increase letter spacing for better legibility */
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
+  gap: var(--spacing-lg);
+}
+
+/* Improved navigation with better legibility */
+.nav-link {
+  font-family: var(--heading-font);
+  font-size: var(--font-xs);
+  position: relative;
+  padding: var(--spacing-sm) 0;
+  text-transform: uppercase;
+  /* Enhanced shadow for better contrast against dark background */
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7);
+  letter-spacing: 0.05em;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--primary);
+  transition: width var(--transition-medium);
+}
+
+.nav-link:hover {
+  color: var(--primary);
+  /* Enhanced glow effect on hover */
+  text-shadow: 0 0 8px rgba(255, 0, 102, 0.6);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.register-link {
+  color: var(--primary);
+  font-weight: bold;
+}
+
+/* Mobile menu button - hamburger with pixel styling */
+.mobile-menu-btn {
+  display: none;
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  z-index: 60;
+}
+
+.mobile-menu-btn span {
+  display: block;
+  width: 24px;
+  height: 3px;
+  margin-bottom: 5px;
+  background-color: var(--secondary);
+  transition: transform var(--transition-medium);
+}
+
+.mobile-menu-btn span:last-child {
+  margin-bottom: 0;
+}
+
+/* Mobile menu styling with better typography */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--dark);
+  z-index: 50;
+  padding-top: 5rem;
+  text-align: center;
+}
+
+.mobile-menu a {
+  display: block;
+  padding: var(--spacing-lg);
+  font-family: var(--heading-font);
+  font-size: var(--font-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid rgba(0, 255, 204, 0.1);
+}
+
+.mobile-menu.active {
+  display: block;
+}
+
+/* ======= Hero Section ======= */
+.hero {
+  padding: var(--spacing-xl) 0;
+  min-height: 50vh;
+  text-align: center;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-title {
+  font-family: 'Silkscreen', monospace;
+  font-size: 2.4rem;
+  color: var(--secondary);
+  margin-bottom: var(--spacing-lg);
+  letter-spacing: 0.05em;
+  line-height: 1.3;
+}
+
+.hero-subtitle {
+  font-family: 'Silkscreen', monospace;
+  font-size: 1.4rem;
+  margin-bottom: var(--spacing-lg);
+  letter-spacing: 0.03em;
+  line-height: 1.5;
+}
+
+/* ======= Button Styles ======= */
+.retro-btn {
+  font-family: var(--accent-font);
+  font-size: var(--font-xs);
+  padding: 0.8rem 1.5rem;
+  background-color: var(--primary);
+  color: var(--text-bright);
+  border: 4px solid var(--text-bright);
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.8);
+  position: relative;
+  text-decoration: none;
+  display: inline-block;
+  transition: all var(--transition-fast);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  /* Improve letter spacing for better legibility */
+  letter-spacing: 0.1em;
+  /* Add pixelated rendering */
+  image-rendering: pixelated;
+  /* Enhanced shadow for better contrast */
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.9);
+}
+
+.retro-btn:hover {
+  transform: translate(4px, 4px);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.8);
+  color: var(--text-bright);
+}
+
+.retro-btn:active {
+  transform: translate(8px, 8px);
+  box-shadow: none;
+}
+
+/* ======= Card Styles ======= */
+.retro-card {
+  background-color: var(--card-bg);
+  border: 4px solid var(--primary);
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.8);
+  transition: all var(--transition-medium);
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  position: relative;
+  overflow: hidden;
+  /* Add subtle inner glow for better readability against dark background */
+  box-shadow: 
+    8px 8px 0 rgba(0, 0, 0, 0.8),
+    inset 0 0 20px rgba(0, 255, 204, 0.05);
+}
+
+.retro-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+.retro-card:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 12px 12px 0 rgba(0, 0, 0, 0.8);
+}
+
+/* ======= Section Titles with better legibility ======= */
+.section-title {
+  position: relative;
+  display: inline-block;
+  margin-bottom: var(--spacing-xl);
+  color: var(--primary);
+  font-family: 'Silkscreen', monospace;
+  font-size: 1.6rem;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  /* Add stronger pixel shadow for better contrast */
+  text-shadow: 
+    2px 2px 0 var(--text-shadow),
+    4px 4px 0 rgba(0, 0, 0, 0.4);
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -12px;
+  width: 100%;
+  height: 4px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--secondary) 0,
+    var(--secondary) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+}
+
+.subtitle {
+  color: var(--secondary);
+  font-family: var(--heading-font);
+  margin-bottom: var(--spacing-md);
+  letter-spacing: 0.05em;
+}
+
+.feature-title {
+  color: var(--secondary);
+  font-family: 'Silkscreen', monospace;
+  font-size: 1.2rem;
+  margin-bottom: var(--spacing-md);
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+}
+
+/* Badge titles adjustments */
+.badge-title {
+  font-family: 'Silkscreen', monospace;
+  font-size: 1.2rem;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.8);
+}
+
+/* ======= Features Grid ======= */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-lg);
+}
+
+/* ======= Schedule Box ======= */
+.schedule-box {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  background-color: rgba(0, 255, 204, 0.1);
+  border-left: 4px solid var(--secondary);
+}
+
+.schedule-title {
+  color: var(--secondary);
+  font-family: var(--heading-font);
+  font-size: var(--font-sm);
+  margin-bottom: var(--spacing-md);
+  letter-spacing: 0.05em;
+}
+
+/* ======= Custom List Style with better legibility ======= */
+.pixel-list {
+  list-style: none;
+  padding-left: 1.5rem;
+}
+
+.pixel-list li {
+  position: relative;
+  margin-bottom: var(--spacing-md);
+  line-height: 1.7; /* Increased line height for better readability */
+}
+
+.pixel-list li::before {
+  content: "►";
+  position: absolute;
+  left: -1.5rem;
+  color: var(--secondary);
+  /* Add shadow for better contrast */
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.8);
+}
+
+/* ======= Badges List ======= */
+.badges-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+}
+
+.badge-item {
+  padding: var(--spacing-md);
+  background-color: rgba(0, 0, 0, 0.2);
+  border-left: 4px solid var(--accent);
+  margin-bottom: var(--spacing-md);
+}
+
+.badge-description {
+  font-size: var(--font-sm);
+  margin-bottom: 0;
+}
+
+/* ======= Footer ======= */
+.page-footer {
+  padding: var(--spacing-lg) 0;
+  background-color: var(--darker);
+  text-align: center;
+}
+
+.footer-text {
+  font-family: var(--accent-font);
+  font-size: var(--font-xs);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.8; /* Increased line height for better legibility */
+  letter-spacing: 0.05em;
+}
+
+.copyright {
+  font-family: var(--body-font);
+  font-size: var(--font-sm);
+  letter-spacing: 0.02em;
+}
+
+/* ======= Responsive Styles with better mobile typography ======= */
+@media (max-width: 1024px) {
+  :root {
+    --font-xl: 1.75rem;
+    --font-lg: 1.25rem;
+  }
+  
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .badges-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    /* Increase base font size for better mobile legibility */
+    --font-base: 1.3rem;
+  }
+  
+  body {
+    /* Slightly larger line height on mobile */
+    line-height: 1.7;
+  }
+  
+  .desktop-nav {
+    display: none;
+  }
+  
+  .mobile-menu-btn {
+    display: block;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  h1 {
+    font-size: 1.8rem;
+  }
+  
+  h2 {
+    font-size: 1.6rem;
+  }
+  
+  h3 {
+    font-size: 1.4rem;
+  }
+  
+  .hero-title {
+    font-size: 1.8rem;
+  }
+  
+  .section-title {
+    font-size: 1.4rem;
+  }
+  
+  .feature-title {
+    font-size: 1.1rem;
+  }
+  
+  .retro-card {
+    padding: var(--spacing-md);
+  }
+  
+  .pixel-list li::before {
+    left: -1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    /* Further increase base font size for small mobile screens */
+    --font-base: 1.35rem;
+    --font-lg: 1.2rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.3rem;
+  }
+  
+  h3 {
+    font-size: 1.2rem;
+  }
+  
+  .hero-title {
+    font-size: 1.5rem;
+  }
+  
+  .retro-btn {
+    font-size: 0.6rem;
+    padding: 0.5rem 1rem;
+    /* Reduce letter spacing for better fit on small screens */
+    letter-spacing: 0.05em;
+  }
+  
+  .section-padding {
+    padding: var(--spacing-lg) 0;
+  }
+  
+  .logo h1 {
+    font-size: 0.6rem;
+  }
+  
+  .hero-subtitle {
+    font-size: var(--font-base);
+  }
+}
+
+/* Mobile menu button animation */
+.mobile-menu-btn.active span:first-child {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.mobile-menu-btn.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-menu-btn.active span:last-child {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Special accessible focus styles */
+a:focus, button:focus {
+  outline: 3px solid var(--secondary);
+  outline-offset: 3px;
+}
