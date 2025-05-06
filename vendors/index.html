@@ -715,15 +715,11 @@
                         </div>
                         <div class="package-body">
                             <ul class="package-features">
+                                <li><strong>All Silver benefits, plus:</strong></li>
                                 <li>Premium logo placement on event shirts</li>
-                                <li>Featured logo on event projector screen rotation</li>
-                                <li>Special recognition during opening and closing ceremonies</li>
                                 <li>Dedicated sponsor table at networking event</li>
-                                <li>Social media recognition (5 dedicated posts)</li>
-                                <li>Prominent website placement</li>
                                 <li>Opportunity to address participants</li>
                                 <li>Priority access to recruit participants</li>
-                                <li>Detailed impact report after the event</li>
                             </ul>
                         </div>
                         <div class="package-footer">
@@ -737,13 +733,10 @@
                         </div>
                         <div class="package-body">
                             <ul class="package-features">
-                                <li>Logo placement on event shirts</li>
-                                <li>Logo on event projector screen rotation</li>
+                                <li><strong>All Bronze benefits, plus:</strong></li>
+                                <li>Enhanced logo placement</li>
                                 <li>Recognition during opening and closing ceremonies</li>
-                                <li>Social media recognition (3 dedicated posts)</li>
-                                <li>Website placement</li>
                                 <li>Access to recruit participants</li>
-                                <li>Detailed impact report after the event</li>
                             </ul>
                         </div>
                         <div class="package-footer">
@@ -760,7 +753,6 @@
                                 <li>Logo placement on event shirts</li>
                                 <li>Logo on event projector screen rotation</li>
                                 <li>Recognition during ceremonies</li>
-                                <li>Social media recognition (1 dedicated post)</li>
                                 <li>Website placement</li>
                                 <li>Detailed impact report after the event</li>
                             </ul>
@@ -796,8 +788,8 @@
                             <div class="option-icon">📱</div>
                             <div class="option-content">
                                 <h5 class="option-title">Digital Promotion</h5>
-                                <p class="option-description">Gain visibility through our website, social media
-                                    channels, and all event promotional materials.</p>
+                                <p class="option-description">Gain visibility through our website and all event
+                                    promotional materials.</p>
                             </div>
                         </li>
                     </ul>
@@ -919,6 +911,62 @@
     <section id="contact" class="section-padding" style="background-color: #f8f9fa;">
         <div class="container">
             <h3 class="section-title text-center">Contact Us</h3>
+
+            <div
+                style="background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; border-radius: 5px; margin-bottom: 30px; text-align: center;">
+                <strong>Note:</strong> Our contact form is coming soon! In the meantime, please email us at
+                info@codecamp.cachevalley.co
+            </div>
+
             <p class="text-center mb-8">
-                Interested in sponsoring CodeCamp: Bridgerland? Complete the form below, and a member of our team will
-                contact you to discuss sponsorship opportunities.
+                Interested in sponsoring CodeCamp: Bridgerland? Contact us, and a member of our team will reach out to
+                discuss sponsorship opportunities.
+            </p>
+
+            <div class="max-w-3xl text-center">
+                <h4 class="subtitle mb-4">Other Ways to Connect</h4>
+                <p>
+                    <strong>Email:</strong> info@codecamp.cachevalley.co<br>
+                    <strong>Website:</strong> <a href="https://codecamp.cachevalley.co"
+                        target="_blank">codecamp.cachevalley.co</a><br>
+                    <strong>Location:</strong> Bridgerland Technical College, Logan, Utah
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+        <div class="container text-center">
+            <p class="footer-text">Developed by local professionals, for local professionals—strengthening Cache
+                Valley's technology sector.</p>
+            <p class="copyright">© 2025 CodeCamp: Bridgerland. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple JavaScript for mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuBtn = document.getElementById('menuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            menuBtn.addEventListener('click', function () {
+                if (mobileMenu.style.display === 'flex') {
+                    mobileMenu.style.display = 'none';
+                } else {
+                    mobileMenu.style.display = 'flex';
+                }
+            });
+
+            // Close mobile menu when clicking on a link
+            const mobileLinks = mobileMenu.getElementsByTagName('a');
+            for (let i = 0; i < mobileLinks.length; i++) {
+                mobileLinks[i].addEventListener('click', function () {
+                    mobileMenu.style.display = 'none';
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
