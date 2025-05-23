@@ -43,7 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function playBackgroundMusic() {
     try {
-      // Create a fallback 8-bit style music using Web Audio API if external sources fail
       await bgMusic.play();
     } catch (error) {
       console.log("Could not play background music:", error);
@@ -78,10 +77,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function playRetroSound(type) {
-    // Check if sound is enabled
-    const soundEnabled = localStorage.getItem("retroSoundEnabled");
-    if (soundEnabled !== "true") return;
-
     const audioContext = new (window.AudioContext ||
       window.webkitAudioContext)();
     const oscillator = audioContext.createOscillator();
