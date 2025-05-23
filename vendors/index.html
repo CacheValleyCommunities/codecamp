@@ -2,500 +2,717 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>CodeCamp: Bridgerland - Sponsorship Opportunities</title>
         <style>
-            /* Global Styles */
+            /* Modern CSS Reset & Variables */
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
             :root {
-                --primary: #0056b3;
-                --secondary: #6c757d;
-                --accent: #17a2b8;
-                --light: #f8f9fa;
-                --dark: #343a40;
+                --primary: #2563eb;
+                --primary-dark: #1d4ed8;
+                --secondary: #64748b;
+                --accent: #06b6d4;
+                --accent-dark: #0891b2;
+                --success: #10b981;
+                --warning: #f59e0b;
+                --danger: #ef4444;
+
+                --gray-50: #f8fafc;
+                --gray-100: #f1f5f9;
+                --gray-200: #e2e8f0;
+                --gray-300: #cbd5e1;
+                --gray-600: #475569;
+                --gray-700: #334155;
+                --gray-800: #1e293b;
+                --gray-900: #0f172a;
+
                 --white: #ffffff;
-                --success: #28a745;
+                --black: #000000;
+
+                --gradient-primary: linear-gradient(
+                    135deg,
+                    var(--primary) 0%,
+                    var(--primary-dark) 100%
+                );
+                --gradient-accent: linear-gradient(
+                    135deg,
+                    var(--accent) 0%,
+                    var(--accent-dark) 100%
+                );
+                --gradient-gold: linear-gradient(
+                    135deg,
+                    #fbbf24 0%,
+                    #f59e0b 100%
+                );
+                --gradient-silver: linear-gradient(
+                    135deg,
+                    #e5e7eb 0%,
+                    #9ca3af 100%
+                );
+                --gradient-bronze: linear-gradient(
+                    135deg,
+                    #d97706 0%,
+                    #92400e 100%
+                );
+
+                --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+                --shadow:
+                    0 1px 3px 0 rgb(0 0 0 / 0.1),
+                    0 1px 2px -1px rgb(0 0 0 / 0.1);
+                --shadow-md:
+                    0 4px 6px -1px rgb(0 0 0 / 0.1),
+                    0 2px 4px -2px rgb(0 0 0 / 0.1);
+                --shadow-lg:
+                    0 10px 15px -3px rgb(0 0 0 / 0.1),
+                    0 4px 6px -4px rgb(0 0 0 / 0.1);
+                --shadow-xl:
+                    0 20px 25px -5px rgb(0 0 0 / 0.1),
+                    0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+                --rounded-sm: 0.125rem;
+                --rounded: 0.25rem;
+                --rounded-md: 0.375rem;
+                --rounded-lg: 0.5rem;
+                --rounded-xl: 0.75rem;
+                --rounded-2xl: 1rem;
+                --rounded-3xl: 1.5rem;
+
+                --font-sans:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    "Helvetica Neue", Arial, sans-serif;
+                --font-mono:
+                    "SF Mono", Monaco, Inconsolata, "Roboto Mono", monospace;
+            }
+
+            html {
+                scroll-behavior: smooth;
             }
 
             body {
-                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                font-family: var(--font-sans);
                 line-height: 1.6;
-                color: #333;
-                margin: 0;
-                padding: 0;
-                background-color: #f5f5f5;
+                color: var(--gray-700);
+                background-color: var(--white);
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
             }
 
-            .container {
-                width: 90%;
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 0 15px;
-            }
-
+            /* Typography */
             h1,
             h2,
             h3,
             h4,
             h5,
             h6 {
-                font-weight: 600;
-                margin-top: 0;
-                color: var(--dark);
+                font-weight: 700;
+                line-height: 1.2;
+                color: var(--gray-900);
+                margin-bottom: 0.5em;
             }
 
-            /* Header Styles */
-            .sticky-header {
+            h1 {
+                font-size: clamp(2rem, 4vw, 3rem);
+            }
+            h2 {
+                font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+            }
+            h3 {
+                font-size: clamp(1.5rem, 3vw, 2rem);
+            }
+            h4 {
+                font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+            }
+            h5 {
+                font-size: clamp(1.125rem, 2vw, 1.25rem);
+            }
+
+            p {
+                margin-bottom: 1rem;
+                line-height: 1.7;
+            }
+
+            a {
+                color: var(--primary);
+                text-decoration: none;
+                transition: all 0.2s ease;
+            }
+
+            a:hover {
+                color: var(--primary-dark);
+                text-decoration: underline;
+            }
+
+            /* Layout */
+            .container {
+                width: 100%;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 1rem;
+            }
+
+            .container-sm {
+                max-width: 640px;
+            }
+
+            .container-lg {
+                max-width: 1400px;
+            }
+
+            /* Header */
+            .header {
                 position: sticky;
                 top: 0;
-                background-color: white;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid var(--gray-200);
                 z-index: 1000;
+                transition: all 0.3s ease;
             }
 
-            .header-container {
+            .header-content {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                padding: 15px 0;
+                padding: 1rem 0;
             }
 
-            .logo h1 {
-                font-size: 1.8rem;
-                margin: 0;
+            .logo {
+                font-size: 1.5rem;
+                font-weight: 800;
                 color: var(--primary);
+                text-decoration: none;
             }
 
-            .nav-list {
-                display: flex;
+            .nav-desktop {
+                display: none;
+                gap: 2rem;
                 list-style: none;
-                margin: 0;
-                padding: 0;
-            }
-
-            .nav-list li {
-                margin-left: 25px;
             }
 
             .nav-link {
-                text-decoration: none;
-                color: var(--dark);
                 font-weight: 500;
-                transition: color 0.3s;
+                color: var(--gray-700);
+                transition: color 0.2s ease;
+                text-decoration: none;
             }
 
             .nav-link:hover {
                 color: var(--primary);
+                text-decoration: none;
             }
 
-            .register-link {
-                color: var(--primary);
+            .nav-link.cta {
+                background: var(--gradient-primary);
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: var(--rounded-lg);
                 font-weight: 600;
             }
 
-            /* Mobile Menu */
+            .nav-link.cta:hover {
+                transform: translateY(-1px);
+                box-shadow: var(--shadow-md);
+                color: white;
+                text-decoration: none;
+            }
+
             .mobile-menu-btn {
-                display: none;
+                display: flex;
                 flex-direction: column;
+                gap: 4px;
                 cursor: pointer;
+                padding: 0.5rem;
+                border-radius: var(--rounded);
+                transition: background-color 0.2s ease;
+            }
+
+            .mobile-menu-btn:hover {
+                background-color: var(--gray-100);
             }
 
             .mobile-menu-btn span {
+                width: 24px;
                 height: 3px;
-                width: 25px;
-                background: var(--dark);
-                margin: 3px 0;
+                background: var(--gray-700);
                 border-radius: 2px;
+                transition: all 0.3s ease;
+            }
+
+            .mobile-menu-btn.active span:nth-child(1) {
+                transform: rotate(45deg) translate(6px, 6px);
+            }
+
+            .mobile-menu-btn.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .mobile-menu-btn.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(6px, -6px);
             }
 
             .mobile-menu {
-                display: none;
-                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
                 background: white;
-                padding: 20px;
-                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                border-bottom: 1px solid var(--gray-200);
+                padding: 1rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
             }
 
-            .mobile-menu a {
-                margin: 8px 0;
-                text-decoration: none;
-                color: var(--dark);
-                font-weight: 500;
+            .mobile-menu.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .mobile-menu-list {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                list-style: none;
             }
 
             /* Hero Section */
             .hero {
-                background: linear-gradient(
-                    135deg,
-                    var(--primary) 0%,
-                    #003366 100%
-                );
+                background: var(--gradient-primary);
                 color: white;
-                padding: 60px 0;
+                padding: 4rem 0;
                 text-align: center;
+                position: relative;
+                overflow: hidden;
             }
 
-            .hero-title {
-                font-size: 2.5rem;
-                margin-bottom: 20px;
+            .hero::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 1000,100 1000,0"/></svg>');
+                background-size: cover;
+            }
+
+            .hero-content {
+                position: relative;
+                z-index: 1;
+            }
+
+            .hero h2 {
                 color: white;
+                margin-bottom: 1rem;
             }
 
             .hero-subtitle {
-                font-size: 1.2rem;
-                margin-bottom: 30px;
+                font-size: 1.25rem;
+                margin-bottom: 2rem;
                 opacity: 0.9;
+                max-width: 600px;
+                margin-left: auto;
+                margin-right: auto;
             }
 
-            /* Button Styles */
+            /* Buttons */
             .btn {
-                display: inline-block;
-                padding: 12px 25px;
-                background-color: var(--accent);
-                color: white;
-                text-decoration: none;
-                border-radius: 5px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                padding: 0.75rem 1.5rem;
                 font-weight: 600;
-                transition: all 0.3s;
+                border-radius: var(--rounded-lg);
+                text-decoration: none;
                 border: none;
                 cursor: pointer;
-            }
-
-            .btn:hover {
-                background-color: #1390a5;
-                transform: translateY(-2px);
+                transition: all 0.2s ease;
+                font-size: 1rem;
+                line-height: 1;
             }
 
             .btn-primary {
-                background-color: var(--primary);
-            }
-
-            .btn-primary:hover {
-                background-color: #0046a1;
-            }
-
-            .btn-outline {
-                background-color: transparent;
-                border: 2px solid var(--primary);
-                color: var(--primary);
-            }
-
-            .btn-outline:hover {
-                background-color: var(--primary);
+                background: var(--gradient-primary);
                 color: white;
             }
 
-            /* Section Styles */
-            .section-padding {
-                padding: 60px 0;
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-lg);
+                color: white;
+                text-decoration: none;
+            }
+
+            .btn-outline {
+                background: transparent;
+                color: var(--primary);
+                border: 2px solid var(--primary);
+            }
+
+            .btn-outline:hover {
+                background: var(--primary);
+                color: white;
+                text-decoration: none;
+            }
+
+            .btn-accent {
+                background: var(--gradient-accent);
+                color: white;
+            }
+
+            .btn-accent:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-lg);
+                color: white;
+                text-decoration: none;
+            }
+
+            /* Sections */
+            .section {
+                padding: 4rem 0;
+            }
+
+            .section-alt {
+                background-color: var(--gray-50);
             }
 
             .section-title {
-                margin-bottom: 30px;
-                font-size: 2rem;
-                color: var(--primary);
+                text-align: center;
+                margin-bottom: 3rem;
+                color: var(--gray-900);
             }
 
-            .subtitle {
-                font-size: 1.4rem;
-                margin-bottom: 15px;
-                color: var(--secondary);
+            .section-subtitle {
+                text-align: center;
+                font-size: 1.125rem;
+                color: var(--gray-600);
+                max-width: 800px;
+                margin: 0 auto 3rem;
             }
 
-            /* Card Styles */
+            /* Cards */
             .card {
-                background-color: white;
-                border-radius: 8px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-                padding: 25px;
-                margin-bottom: 20px;
+                background: white;
+                border-radius: var(--rounded-xl);
+                box-shadow: var(--shadow);
+                padding: 2rem;
+                transition: all 0.3s ease;
+            }
+
+            .card:hover {
+                box-shadow: var(--shadow-lg);
+                transform: translateY(-2px);
+            }
+
+            .card-grid {
+                display: grid;
+                gap: 2rem;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             }
 
             /* Sponsor Packages */
             .sponsor-packages {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-                gap: 20px;
-                margin: 30px 0;
+                gap: 2rem;
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                margin: 3rem 0;
             }
 
             .package-card {
-                border-radius: 8px;
+                background: white;
+                border-radius: var(--rounded-xl);
                 overflow: hidden;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-                transition:
-                    transform 0.3s,
-                    box-shadow 0.3s;
+                box-shadow: var(--shadow-md);
+                transition: all 0.3s ease;
+                border: 1px solid var(--gray-200);
             }
 
             .package-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+                transform: translateY(-4px);
+                box-shadow: var(--shadow-xl);
             }
 
             .package-header {
-                background-color: var(--primary);
-                color: white;
-                padding: 20px;
+                padding: 2rem;
                 text-align: center;
+                color: white;
+                position: relative;
             }
 
-            .gold .package-header {
-                background: linear-gradient(135deg, #ffd700 0%, #daa520 100%);
+            .package-card.gold .package-header {
+                background: var(--gradient-gold);
             }
 
-            .silver .package-header {
-                background: linear-gradient(135deg, #c0c0c0 0%, #a9a9a9 100%);
+            .package-card.silver .package-header {
+                background: var(--gradient-silver);
+                color: var(--gray-800);
             }
 
-            .bronze .package-header {
-                background: linear-gradient(135deg, #cd7f32 0%, #8b4513 100%);
+            .package-card.bronze .package-header {
+                background: var(--gradient-bronze);
             }
 
             .package-title {
+                font-size: 1.5rem;
                 margin: 0;
-                font-size: 1.6rem;
-            }
-
-            .package-price {
-                margin: 10px 0 0 0;
-                font-size: 1.2rem;
-                opacity: 0.9;
             }
 
             .package-body {
-                padding: 20px;
-                background: white;
+                padding: 2rem;
             }
 
             .package-features {
                 list-style: none;
-                padding: 0;
-                margin: 0;
             }
 
             .package-features li {
-                padding: 10px 0;
-                border-bottom: 1px solid #f0f0f0;
+                padding: 0.75rem 0;
+                border-bottom: 1px solid var(--gray-200);
+                position: relative;
+                padding-left: 1.5rem;
             }
 
             .package-features li:last-child {
                 border-bottom: none;
             }
 
+            .package-features li::before {
+                content: "✓";
+                position: absolute;
+                left: 0;
+                color: var(--success);
+                font-weight: bold;
+            }
+
             .package-footer {
-                padding: 20px;
-                background: #f9f9f9;
+                padding: 2rem;
+                background: var(--gray-50);
                 text-align: center;
             }
 
-            /* Sponsorship Options */
+            /* Options List */
             .options-list {
-                list-style: none;
-                padding: 0;
+                display: grid;
+                gap: 1.5rem;
             }
 
             .option-item {
                 display: flex;
-                margin-bottom: 15px;
                 background: white;
-                border-radius: 8px;
+                border-radius: var(--rounded-xl);
                 overflow: hidden;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                box-shadow: var(--shadow);
+                transition: all 0.3s ease;
+            }
+
+            .option-item:hover {
+                box-shadow: var(--shadow-md);
+                transform: translateX(4px);
             }
 
             .option-icon {
-                background-color: var(--primary);
+                background: var(--gradient-primary);
                 color: white;
-                padding: 20px;
+                padding: 1.5rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 1.5rem;
+                font-size: 2rem;
                 min-width: 80px;
+                flex-shrink: 0;
             }
 
             .option-content {
-                padding: 15px;
+                padding: 1.5rem;
+                flex: 1;
             }
 
             .option-title {
-                font-weight: 600;
-                margin: 0 0 5px 0;
-                color: var(--primary);
+                font-weight: 700;
+                margin: 0 0 0.5rem 0;
+                color: var(--gray-900);
             }
 
             .option-description {
                 margin: 0;
-                font-size: 0.95rem;
+                color: var(--gray-600);
+                line-height: 1.6;
             }
 
-            /* Team Section */
+            /* Team Grid */
             .team-grid {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-                gap: 20px;
+                gap: 1.5rem;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             }
 
             .team-member {
                 background: white;
-                border-radius: 8px;
+                border-radius: var(--rounded-xl);
                 overflow: hidden;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                box-shadow: var(--shadow);
                 text-align: center;
-                padding-bottom: 15px;
+                transition: all 0.3s ease;
             }
 
-            .member-photo {
+            .team-member:hover {
+                transform: translateY(-4px);
+                box-shadow: var(--shadow-lg);
+            }
+
+            .member-avatar {
                 width: 100%;
                 height: 200px;
-                background-color: #e9ecef;
+                background: var(--gradient-primary);
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color: var(--secondary);
+                color: white;
+                font-size: 3rem;
+                font-weight: bold;
             }
 
             .member-info {
-                padding: 15px;
+                padding: 1.5rem;
             }
 
             .member-name {
-                margin: 0 0 5px 0;
-                font-size: 1.1rem;
+                font-size: 1.25rem;
+                font-weight: 700;
+                margin: 0 0 0.5rem 0;
+                color: var(--gray-900);
             }
 
             .member-title {
+                color: var(--gray-600);
                 margin: 0;
-                font-size: 0.9rem;
-                color: var(--secondary);
-            }
-
-            /* CTA Section */
-            .cta-section {
-                background-color: var(--dark);
-                color: white;
-                text-align: center;
-                padding: 60px 0;
-            }
-
-            .cta-title {
-                color: white;
-                margin-bottom: 20px;
-            }
-
-            /* Footer */
-            .page-footer {
-                background-color: var(--dark);
-                color: white;
-                padding: 30px 0;
-                text-align: center;
-            }
-
-            .footer-text {
-                font-size: 1.1rem;
-                margin-bottom: 10px;
-            }
-
-            .copyright {
-                font-size: 0.9rem;
-                opacity: 0.7;
             }
 
             /* Media Card */
             .media-card {
-                display: flex;
-                flex-direction: column;
                 background: white;
-                border-radius: 8px;
+                border-radius: var(--rounded-xl);
+                box-shadow: var(--shadow);
                 overflow: hidden;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-                margin-bottom: 30px;
-            }
-
-            .media-img {
-                width: 100%;
-                height: 200px;
-                background-color: #e9ecef;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: var(--secondary);
+                margin: 2rem 0;
             }
 
             .media-content {
-                padding: 20px;
+                padding: 2rem;
             }
 
             .media-title {
-                margin: 0 0 10px 0;
-                color: var(--primary);
+                color: var(--gray-900);
+                margin-bottom: 1rem;
             }
 
-            .media-description {
-                margin: 0 0 15px 0;
+            /* Contact Section */
+            .contact-cta {
+                text-align: center;
+                background: var(--gradient-primary);
+                color: white;
+                padding: 4rem 0;
             }
 
-            /* Responsive Styles */
-            @media (max-width: 768px) {
-                .desktop-nav {
-                    display: none;
-                }
+            .contact-cta h3 {
+                color: white;
+                margin-bottom: 1rem;
+            }
 
-                .mobile-menu-btn {
-                    display: flex;
-                }
+            .contact-cta p {
+                font-size: 1.125rem;
+                margin-bottom: 2rem;
+                opacity: 0.9;
+            }
 
-                .hero-title {
-                    font-size: 2rem;
-                }
+            /* Footer */
+            .footer {
+                background: var(--gray-900);
+                color: white;
+                padding: 3rem 0;
+                text-align: center;
+            }
 
-                .section-title {
-                    font-size: 1.7rem;
-                }
+            .footer-text {
+                font-size: 1.125rem;
+                margin-bottom: 1rem;
+                opacity: 0.9;
+            }
+
+            .copyright {
+                opacity: 0.7;
+                font-size: 0.875rem;
             }
 
             /* Utility Classes */
             .text-center {
                 text-align: center;
             }
-
+            .text-left {
+                text-align: left;
+            }
             .text-right {
                 text-align: right;
             }
 
+            .font-bold {
+                font-weight: 700;
+            }
+            .font-semibold {
+                font-weight: 600;
+            }
+            .font-medium {
+                font-weight: 500;
+            }
+
+            .text-primary {
+                color: var(--primary);
+            }
+            .text-secondary {
+                color: var(--secondary);
+            }
+            .text-gray-600 {
+                color: var(--gray-600);
+            }
+
+            .mb-1 {
+                margin-bottom: 0.25rem;
+            }
             .mb-2 {
                 margin-bottom: 0.5rem;
             }
-
             .mb-4 {
                 margin-bottom: 1rem;
             }
-
             .mb-6 {
                 margin-bottom: 1.5rem;
             }
-
             .mb-8 {
                 margin-bottom: 2rem;
-            }
-
-            .mt-2 {
-                margin-top: 0.5rem;
             }
 
             .mt-4 {
                 margin-top: 1rem;
             }
-
             .mt-6 {
                 margin-top: 1.5rem;
             }
-
             .mt-8 {
                 margin-top: 2rem;
             }
 
-            .max-w-3xl {
-                max-width: 48rem;
+            .max-w-4xl {
+                max-width: 56rem;
                 margin-left: auto;
                 margin-right: auto;
             }
@@ -505,65 +722,109 @@
                 font-weight: 600;
             }
 
-            .bold {
-                font-weight: 600;
+            /* Responsive Design */
+            @media (min-width: 768px) {
+                .nav-desktop {
+                    display: flex;
+                }
+
+                .mobile-menu-btn {
+                    display: none;
+                }
+
+                .container {
+                    padding: 0 2rem;
+                }
+
+                .hero {
+                    padding: 6rem 0;
+                }
+
+                .section {
+                    padding: 6rem 0;
+                }
+
+                .option-item {
+                    flex-direction: row;
+                }
+
+                .option-icon {
+                    min-width: 100px;
+                    font-size: 2.5rem;
+                }
             }
 
-            /* Contact Form */
-            .contact-form {
-                max-width: 600px;
-                margin: 0 auto;
+            @media (min-width: 1024px) {
+                .sponsor-packages {
+                    grid-template-columns: repeat(3, 1fr);
+                }
             }
 
-            .form-group {
-                margin-bottom: 20px;
+            /* Animations */
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
-            .form-label {
-                display: block;
-                margin-bottom: 5px;
-                font-weight: 500;
+            .fade-in-up {
+                animation: fadeInUp 0.6s ease forwards;
             }
 
-            .form-control {
-                width: 100%;
-                padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                font-family: inherit;
-                font-size: 1rem;
-            }
-
-            textarea.form-control {
-                min-height: 120px;
-            }
-
-            .form-control:focus {
-                outline: none;
-                border-color: var(--primary);
-                box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.2);
+            /* Smooth scrolling offset for fixed header */
+            section {
+                scroll-margin-top: 100px;
             }
         </style>
     </head>
-
     <body>
         <!-- Header -->
-        <header class="sticky-header">
-            <div class="container header-container">
-                <div class="logo">
-                    <h1>CodeCamp: Bridgerland</h1>
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <a href="#" class="logo">CodeCamp: Bridgerland</a>
+
+                    <!-- Desktop Navigation -->
+                    <nav>
+                        <ul class="nav-desktop">
+                            <li><a href="#about" class="nav-link">About</a></li>
+                            <li>
+                                <a href="#opportunities" class="nav-link"
+                                    >Sponsorship</a
+                                >
+                            </li>
+                            <li>
+                                <a href="#benefits" class="nav-link"
+                                    >Benefits</a
+                                >
+                            </li>
+                            <li>
+                                <a href="#team" class="nav-link">Our Team</a>
+                            </li>
+                            <li>
+                                <a href="#contact" class="nav-link cta"
+                                    >Contact Us</a
+                                >
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <!-- Mobile Menu Button -->
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
                 </div>
 
-                <!-- Mobile menu button -->
-                <div class="mobile-menu-btn" id="menuBtn">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-
-                <!-- Desktop navigation -->
-                <nav class="desktop-nav">
-                    <ul class="nav-list">
+                <!-- Mobile Menu -->
+                <nav class="mobile-menu" id="mobileMenu">
+                    <ul class="mobile-menu-list">
                         <li><a href="#about" class="nav-link">About</a></li>
                         <li>
                             <a href="#opportunities" class="nav-link"
@@ -575,44 +836,33 @@
                         </li>
                         <li><a href="#team" class="nav-link">Our Team</a></li>
                         <li>
-                            <a href="#contact" class="nav-link register-link"
-                                >Contact Us</a
-                            >
+                            <a href="#contact" class="nav-link">Contact Us</a>
                         </li>
                     </ul>
                 </nav>
-            </div>
-
-            <!-- Mobile menu -->
-            <div class="mobile-menu" id="mobileMenu">
-                <a href="#about">About</a>
-                <a href="#opportunities">Sponsorship</a>
-                <a href="#benefits">Benefits</a>
-                <a href="#team">Our Team</a>
-                <a href="#contact" class="register-link">Contact Us</a>
             </div>
         </header>
 
         <!-- Hero -->
         <section class="hero">
             <div class="container">
-                <h2 class="hero-title">
-                    Become a CodeCamp: Bridgerland Sponsor
-                </h2>
-                <p class="hero-subtitle">
-                    Join us in fostering technology education and innovation in
-                    Northern Utah
-                </p>
-                <a href="#contact" class="btn btn-primary"
-                    >SPONSOR THIS EVENT</a
-                >
+                <div class="hero-content">
+                    <h2>Become a CodeCamp: Bridgerland Sponsor</h2>
+                    <p class="hero-subtitle">
+                        Join us in fostering technology education and innovation
+                        in Northern Utah
+                    </p>
+                    <a href="#contact" class="btn btn-accent"
+                        >SPONSOR THIS EVENT</a
+                    >
+                </div>
             </div>
         </section>
 
         <!-- About -->
-        <section id="about" class="section-padding">
+        <section id="about" class="section">
             <div class="container">
-                <div class="card">
+                <div class="card fade-in-up">
                     <h3 class="section-title">About Our Initiative</h3>
                     <p class="mb-6">
                         CodeCamp: Bridgerland is a new hackathon located in
@@ -645,37 +895,41 @@
                     </p>
                 </div>
 
-                <div class="media-card mt-8">
+                <div class="media-card mt-8 fade-in-up">
                     <div class="media-content">
                         <h4 class="media-title">Event Details</h4>
-                        <p class="media-description">
-                            <strong>Location:</strong> Bridgerland Technical
-                            College<br />
-                            <strong>Format:</strong> Two 10-12 hour days (rather
-                            than the traditional 24-hour format)<br />
-                            <strong>Categories:</strong> Game, App, AI, and
-                            Maker projects without restrictive themes<br />
-                            <strong>Participants:</strong> K-12 students,
-                            college students, industry professionals, and
-                            hobbyists<br />
-                            <strong>Date:</strong> July 11th and 12th, 2025
-                        </p>
+                        <div class="media-description">
+                            <p>
+                                <strong>Location:</strong> Bridgerland Technical
+                                College
+                            </p>
+                            <p>
+                                <strong>Format:</strong> Two 10-12 hour days
+                                (rather than the traditional 24-hour format)
+                            </p>
+                            <p>
+                                <strong>Categories:</strong> Game, App, AI, and
+                                Maker projects without restrictive themes
+                            </p>
+                            <p>
+                                <strong>Participants:</strong> K-12 students,
+                                college students, industry professionals, and
+                                hobbyists
+                            </p>
+                            <p>
+                                <strong>Date:</strong> July 11th and 12th, 2025
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Sponsorship Opportunities -->
-        <section
-            id="opportunities"
-            class="section-padding"
-            style="background-color: #f8f9fa"
-        >
+        <section id="opportunities" class="section section-alt">
             <div class="container">
-                <h3 class="section-title text-center">
-                    Sponsorship Opportunities
-                </h3>
-                <p class="max-w-3xl mb-10 text-center">
+                <h3 class="section-title">Sponsorship Opportunities</h3>
+                <p class="section-subtitle">
                     We invite your organization to support CodeCamp: Bridgerland
                     through the following specific sponsorship opportunities.
                     Your contribution will directly impact the success of this
@@ -683,9 +937,15 @@
                     community.
                 </p>
 
-                <h4 class="subtitle mb-4">Specific Sponsorship Needs</h4>
+                <h4
+                    class="font-semibold mb-4 text-center"
+                    style="font-size: 1.5rem"
+                >
+                    Specific Sponsorship Needs
+                </h4>
+
                 <div class="options-list">
-                    <div class="option-item">
+                    <div class="option-item fade-in-up">
                         <div class="option-icon">🎽</div>
                         <div class="option-content">
                             <h5 class="option-title">Event T-Shirts (350)</h5>
@@ -697,7 +957,7 @@
                         </div>
                     </div>
 
-                    <div class="option-item">
+                    <div class="option-item fade-in-up">
                         <div class="option-icon">🍽️</div>
                         <div class="option-content">
                             <h5 class="option-title">Meals (6 Total)</h5>
@@ -712,7 +972,7 @@
                         </div>
                     </div>
 
-                    <div class="option-item">
+                    <div class="option-item fade-in-up">
                         <div class="option-icon">🏆</div>
                         <div class="option-content">
                             <h5 class="option-title">Awards & Recognition</h5>
@@ -724,7 +984,7 @@
                         </div>
                     </div>
 
-                    <div class="option-item">
+                    <div class="option-item fade-in-up">
                         <div class="option-icon">🎁</div>
                         <div class="option-content">
                             <h5 class="option-title">Participant Prizes</h5>
@@ -736,7 +996,7 @@
                         </div>
                     </div>
 
-                    <div class="option-item">
+                    <div class="option-item fade-in-up">
                         <div class="option-icon">👥</div>
                         <div class="option-content">
                             <h5 class="option-title">Volunteer Support</h5>
@@ -758,18 +1018,18 @@
         </section>
 
         <!-- Sponsor Benefits -->
-        <section id="benefits" class="section-padding">
+        <section id="benefits" class="section">
             <div class="container">
-                <div class="card">
+                <div class="card fade-in-up">
                     <h3 class="section-title">Sponsor Benefits</h3>
-                    <p class="mb-6">
+                    <p class="section-subtitle">
                         In return for your valuable support and resources, we
                         commit to providing significant visibility and
                         engagement opportunities for your organization:
                     </p>
 
                     <div class="sponsor-packages">
-                        <div class="package-card gold">
+                        <div class="package-card gold fade-in-up">
                             <div class="package-header">
                                 <h4 class="package-title">
                                     Gold Sponsor ($500+)
@@ -802,7 +1062,7 @@
                             </div>
                         </div>
 
-                        <div class="package-card silver">
+                        <div class="package-card silver fade-in-up">
                             <div class="package-header">
                                 <h4 class="package-title">
                                     Silver Sponsor ($250+)
@@ -830,7 +1090,7 @@
                             </div>
                         </div>
 
-                        <div class="package-card bronze">
+                        <div class="package-card bronze fade-in-up">
                             <div class="package-header">
                                 <h4 class="package-title">
                                     Bronze Sponsor ($100+)
@@ -857,7 +1117,7 @@
                         </div>
                     </div>
 
-                    <p class="mb-6">
+                    <p class="mb-6 text-center">
                         We will also have donation sponsorships available where
                         you give back to the event and the community in any way
                         you can. This can include but is not limited to sending
@@ -867,9 +1127,14 @@
                     </p>
 
                     <div class="mt-8">
-                        <h4 class="subtitle mb-4">Additional Benefits</h4>
-                        <ul class="options-list">
-                            <li class="option-item">
+                        <h4
+                            class="font-semibold mb-6 text-center"
+                            style="font-size: 1.5rem"
+                        >
+                            Additional Benefits
+                        </h4>
+                        <div class="options-list">
+                            <div class="option-item fade-in-up">
                                 <div class="option-icon">🔄</div>
                                 <div class="option-content">
                                     <h5 class="option-title">
@@ -881,9 +1146,9 @@
                                         the event and participants.
                                     </p>
                                 </div>
-                            </li>
+                            </div>
 
-                            <li class="option-item">
+                            <div class="option-item fade-in-up">
                                 <div class="option-icon">🤝</div>
                                 <div class="option-content">
                                     <h5 class="option-title">
@@ -896,9 +1161,9 @@
                                         opportunities.
                                     </p>
                                 </div>
-                            </li>
+                            </div>
 
-                            <li class="option-item">
+                            <div class="option-item fade-in-up">
                                 <div class="option-icon">📱</div>
                                 <div class="option-content">
                                     <h5 class="option-title">
@@ -909,53 +1174,58 @@
                                         all event promotional materials.
                                     </p>
                                 </div>
-                            </li>
-                        </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Our Team -->
-        <section
-            id="team"
-            class="section-padding"
-            style="background-color: #f8f9fa"
-        >
+        <section id="team" class="section section-alt">
             <div class="container">
-                <h3 class="section-title text-center">Our Team</h3>
-                <p class="text-center mb-8">
+                <h3 class="section-title">Our Team</h3>
+                <p class="section-subtitle">
                     CodeCamp: Bridgerland is organized by a dedicated team of
                     professionals from various sectors of the Northern Utah
                     technology community:
                 </p>
 
-                <div class="card mb-8">
-                    <h4 class="subtitle mb-4">Board Representatives</h4>
+                <div class="card mb-8 fade-in-up">
+                    <h4
+                        class="font-semibold mb-6 text-center"
+                        style="font-size: 1.5rem"
+                    >
+                        Board Representatives
+                    </h4>
 
                     <div class="team-grid">
-                        <div class="team-member">
+                        <div class="team-member fade-in-up">
+                            <div class="member-avatar">CE</div>
                             <div class="member-info">
                                 <h5 class="member-name">Cody Erekson</h5>
                                 <p class="member-title">Cache Tech Community</p>
                             </div>
                         </div>
 
-                        <div class="team-member">
+                        <div class="team-member fade-in-up">
+                            <div class="member-avatar">BD</div>
                             <div class="member-info">
                                 <h5 class="member-name">Brent Dalling</h5>
                                 <p class="member-title">Cache Tech Community</p>
                             </div>
                         </div>
 
-                        <div class="team-member">
+                        <div class="team-member fade-in-up">
+                            <div class="member-avatar">AT</div>
                             <div class="member-info">
                                 <h5 class="member-name">Austin Thornley</h5>
                                 <p class="member-title">Cache Tech Community</p>
                             </div>
                         </div>
 
-                        <div class="team-member">
+                        <div class="team-member fade-in-up">
+                            <div class="member-avatar">IB</div>
                             <div class="member-info">
                                 <h5 class="member-name">Ivan Banov</h5>
                                 <p class="member-title">
@@ -964,7 +1234,8 @@
                             </div>
                         </div>
 
-                        <div class="team-member">
+                        <div class="team-member fade-in-up">
+                            <div class="member-avatar">JT</div>
                             <div class="member-info">
                                 <h5 class="member-name">Jennifer Tenhoeve</h5>
                                 <p class="member-title">
@@ -973,7 +1244,8 @@
                             </div>
                         </div>
 
-                        <div class="team-member">
+                        <div class="team-member fade-in-up">
+                            <div class="member-avatar">EF</div>
                             <div class="member-info">
                                 <h5 class="member-name">Erik Falor</h5>
                                 <p class="member-title">
@@ -984,7 +1256,7 @@
                     </div>
                 </div>
 
-                <div class="max-w-3xl text-center">
+                <div class="max-w-4xl text-center fade-in-up">
                     <p>
                         Our board also includes local industry professionals
                         serving as coordinators for various aspects of the
@@ -997,9 +1269,9 @@
         </section>
 
         <!-- Success Story -->
-        <section id="success" class="section-padding">
+        <section id="success" class="section">
             <div class="container">
-                <div class="card">
+                <div class="card fade-in-up">
                     <h3 class="section-title">A Proven Model for Success</h3>
                     <p class="mb-6">
                         We're applying a proven model that has already
@@ -1026,58 +1298,63 @@
             </div>
         </section>
 
-        <!-- Contact -->
-        <section
-            id="contact"
-            class="section-padding"
-            style="background-color: #f8f9fa"
-        >
+        <!-- Contact CTA -->
+        <section class="contact-cta">
             <div class="container">
-                <h3 class="section-title text-center">Contact Us</h3>
-
-                <iframe
-                    style="
-                        width: 100%;
-                        height: 640px;
-                        background-color: #f8f9fa;
-                    "
-                    src="https://crm.cachevalley.co/forms/wtl/86df9b0e056a5322644c4c23652fe1b7"
-                    frameborder="0"
-                    sandbox="allow-top-navigation allow-forms allow-scripts allow-same-origin allow-popups"
-                    allowfullscreen
-                ></iframe>
-
-                <p class="text-center mb-8">
+                <h3>Ready to Get Involved?</h3>
+                <p>
                     Interested in sponsoring CodeCamp: Bridgerland? Contact us,
                     and a member of our team will reach out to discuss
                     sponsorship opportunities.
                 </p>
+                <a
+                    href="https://crm.cachevalley.co/forms/wtl/86df9b0e056a5322644c4c23652fe1b7?styled=1&with_logo=1"
+                    target="_blank"
+                    class="btn btn-accent"
+                >
+                    Fill out our contact form
+                </a>
+            </div>
+        </section>
 
-                <div class="max-w-3xl text-center">
-                    <h4 class="subtitle mb-4">Other Ways to Connect</h4>
-                    <p>
-                        <strong>Website:</strong>
-                        <a
-                            href="https://codecamp.cachevalley.co"
-                            target="_blank"
-                            >codecamp.cachevalley.co</a
-                        ><br />
-                        <strong>Email:</strong>
-                        <a
-                            href="mailto:code.camp@cachevalley.co"
-                            target="_blank"
-                            >code.camp@cachevalley.co</a
-                        ><br />
-                        <strong>Location:</strong> Bridgerland Technical
-                        College, Logan, Utah
-                    </p>
+        <!-- Contact -->
+        <section id="contact" class="section section-alt">
+            <div class="container">
+                <div class="max-w-4xl text-center fade-in-up">
+                    <h4 class="font-semibold mb-6" style="font-size: 1.5rem">
+                        Other Ways to Connect
+                    </h4>
+                    <div class="card">
+                        <p class="mb-4">
+                            <strong>Website:</strong>
+                            <a
+                                href="https://codecamp.cachevalley.co"
+                                target="_blank"
+                            >
+                                codecamp.cachevalley.co
+                            </a>
+                        </p>
+                        <p class="mb-4">
+                            <strong>Email:</strong>
+                            <a
+                                href="mailto:code.camp@cachevalley.co"
+                                target="_blank"
+                            >
+                                code.camp@cachevalley.co
+                            </a>
+                        </p>
+                        <p class="mb-0">
+                            <strong>Location:</strong> Bridgerland Technical
+                            College, Logan, Utah
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Footer -->
-        <footer class="page-footer">
-            <div class="container text-center">
+        <footer class="footer">
+            <div class="container">
                 <p class="footer-text">
                     Developed by local professionals, for local
                     professionals—strengthening Cache Valley's technology
@@ -1090,26 +1367,109 @@
         </footer>
 
         <script>
-            // Simple JavaScript for mobile menu toggle
+            // Modern JavaScript for enhanced functionality
             document.addEventListener("DOMContentLoaded", function () {
-                const menuBtn = document.getElementById("menuBtn");
+                // Mobile menu functionality
+                const mobileMenuBtn = document.getElementById("mobileMenuBtn");
                 const mobileMenu = document.getElementById("mobileMenu");
 
-                menuBtn.addEventListener("click", function () {
-                    if (mobileMenu.style.display === "flex") {
-                        mobileMenu.style.display = "none";
-                    } else {
-                        mobileMenu.style.display = "flex";
+                mobileMenuBtn.addEventListener("click", function () {
+                    mobileMenuBtn.classList.toggle("active");
+                    mobileMenu.classList.toggle("active");
+                });
+
+                // Close mobile menu when clicking on links
+                const mobileLinks = mobileMenu.querySelectorAll("a");
+                mobileLinks.forEach((link) => {
+                    link.addEventListener("click", () => {
+                        mobileMenuBtn.classList.remove("active");
+                        mobileMenu.classList.remove("active");
+                    });
+                });
+
+                // Close mobile menu when clicking outside
+                document.addEventListener("click", function (event) {
+                    if (
+                        !mobileMenuBtn.contains(event.target) &&
+                        !mobileMenu.contains(event.target) &&
+                        mobileMenu.classList.contains("active")
+                    ) {
+                        mobileMenuBtn.classList.remove("active");
+                        mobileMenu.classList.remove("active");
                     }
                 });
 
-                // Close mobile menu when clicking on a link
-                const mobileLinks = mobileMenu.getElementsByTagName("a");
-                for (let i = 0; i < mobileLinks.length; i++) {
-                    mobileLinks[i].addEventListener("click", function () {
-                        mobileMenu.style.display = "none";
+                // Smooth scrolling for anchor links
+                document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+                    anchor.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        const target = document.querySelector(
+                            this.getAttribute("href"),
+                        );
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                            });
+                        }
                     });
-                }
+                });
+
+                // Intersection Observer for animations
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: "0px 0px -50px 0px",
+                };
+
+                const observer = new IntersectionObserver(function (entries) {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = "1";
+                            entry.target.style.transform = "translateY(0)";
+                        }
+                    });
+                }, observerOptions);
+
+                // Observe elements with fade-in-up class
+                document.querySelectorAll(".fade-in-up").forEach((el) => {
+                    el.style.opacity = "0";
+                    el.style.transform = "translateY(30px)";
+                    el.style.transition =
+                        "opacity 0.6s ease, transform 0.6s ease";
+                    observer.observe(el);
+                });
+
+                // Header scroll effect
+                let lastScrollY = window.scrollY;
+                const header = document.querySelector(".header");
+
+                window.addEventListener("scroll", () => {
+                    const currentScrollY = window.scrollY;
+
+                    if (currentScrollY > 100) {
+                        header.style.background = "rgba(255, 255, 255, 0.98)";
+                        header.style.boxShadow =
+                            "0 4px 6px -1px rgb(0 0 0 / 0.1)";
+                    } else {
+                        header.style.background = "rgba(255, 255, 255, 0.95)";
+                        header.style.boxShadow = "0 1px 3px 0 rgb(0 0 0 / 0.1)";
+                    }
+
+                    lastScrollY = currentScrollY;
+                });
+
+                // Add loading state to external links
+                document
+                    .querySelectorAll('a[target="_blank"]')
+                    .forEach((link) => {
+                        link.addEventListener("click", function () {
+                            const originalText = this.innerHTML;
+                            this.innerHTML = "Opening...";
+                            setTimeout(() => {
+                                this.innerHTML = originalText;
+                            }, 2000);
+                        });
+                    });
             });
         </script>
     </body>
