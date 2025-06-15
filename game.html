@@ -1,0 +1,1568 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Quantum Jumper - Phaser 3</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: #222;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                font-family: monospace;
+            }
+
+            #game-container {
+                position: relative;
+            }
+
+            .game-title {
+                color: #5f5fff;
+                text-align: center;
+                font-size: 24px;
+                margin-bottom: 10px;
+                text-shadow: 0 0 10px rgba(95, 95, 255, 0.8);
+            }
+
+            .instructions {
+                color: white;
+                text-align: center;
+                font-size: 14px;
+                margin-top: 10px;
+            }
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.70.0/phaser.min.js"></script>
+    </head>
+
+    <body>
+        <div id="game-container">
+            <div class="game-title">QUANTUM JUMPER</div>
+            <div class="instructions">
+                Arrow keys or WASD to move, Space to shift dimensions<br />
+                Reach the green portal to advance to the next level!
+            </div>
+        </div>
+
+        <script>
+            const GAME_WIDTH = 800;
+            const GAME_HEIGHT = 400;
+            const WORLD_WIDTH = GAME_WIDTH * 3;
+
+            // Jump physics constants
+            const PLAYER_SPEED = 160;
+            const JUMP_VELOCITY = 400;
+            const GRAVITY = 600;
+
+            // Calculate maximum jump distances
+            const MAX_JUMP_HEIGHT =
+                (JUMP_VELOCITY * JUMP_VELOCITY) / (2 * GRAVITY); // ~133 pixels
+            const MAX_JUMP_DISTANCE =
+                (JUMP_VELOCITY * Math.sqrt(2) * PLAYER_SPEED) / GRAVITY; // ~150 pixels
+            const SAFE_JUMP_DISTANCE = MAX_JUMP_DISTANCE * 0.8; // 80% of max for safety margin
+            const SAFE_JUMP_HEIGHT = MAX_JUMP_HEIGHT * 0.8;
+
+            class QuantumJumper extends Phaser.Scene {
+                constructor() {
+                    super({ key: "GameScene" });
+                }
+
+                // Audio system for generating retro arcade sounds
+                createAudioContext() {
+                    this.audioContext = new (window.AudioContext ||
+                        window.webkitAudioContext)();
+                }
+
+                // Screen shake effect
+                screenShake(intensity = 10, duration = 300) {
+                    if (this.shakeTimer > 0) return; // Don't interrupt existing shake
+
+                    this.shakeTimer = duration;
+                    this.shakeIntensity = intensity;
+                    this.originalCameraX = this.cameras.main.scrollX;
+                    this.originalCameraY = this.cameras.main.scrollY;
+                }
+
+                playSound(type, options = {}) {
+                    if (!this.audioContext) return;
+
+                    const now = this.audioContext.currentTime;
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+
+                    switch (type) {
+                        case "jump":
+                            // Clean, bouncy jump: quick upward note that sounds crisp
+                            oscillator.type = "square";
+                            oscillator.frequency.setValueAtTime(330, now);
+                            oscillator.frequency.exponentialRampToValueAtTime(
+                                523,
+                                now + 0.06,
+                            );
+
+                            gainNode.gain.setValueAtTime(0.2, now);
+                            gainNode.gain.exponentialRampToValueAtTime(
+                                0.01,
+                                now + 0.1,
+                            );
+
+                            oscillator.start(now);
+                            oscillator.stop(now + 0.1);
+                            break;
+
+                        case "collect":
+                            // Mario coin-inspired: bright ascending notes
+                            // First note
+                            oscillator.type = "square";
+                            oscillator.frequency.setValueAtTime(988, now); // B5
+                            oscillator.frequency.setValueAtTime(
+                                1319,
+                                now + 0.1,
+                            ); // E6
+
+                            gainNode.gain.setValueAtTime(0.25, now);
+                            gainNode.gain.setValueAtTime(0.25, now + 0.1);
+                            gainNode.gain.exponentialRampToValueAtTime(
+                                0.01,
+                                now + 0.3,
+                            );
+
+                            oscillator.start(now);
+                            oscillator.stop(now + 0.3);
+                            return;
+
+                        case "damage":
+                            // Mario-inspired damage: harsh descending buzz
+                            oscillator.type = "sawtooth";
+                            oscillator.frequency.setValueAtTime(220, now);
+                            oscillator.frequency.linearRampToValueAtTime(
+                                110,
+                                now + 0.15,
+                            );
+                            oscillator.frequency.linearRampToValueAtTime(
+                                55,
+                                now + 0.3,
+                            );
+
+                            gainNode.gain.setValueAtTime(0.3, now);
+                            gainNode.gain.exponentialRampToValueAtTime(
+                                0.01,
+                                now + 0.3,
+                            );
+
+                            oscillator.start(now);
+                            oscillator.stop(now + 0.3);
+                            break;
+
+                        case "levelComplete":
+                            // Mario-inspired victory: classic "ta-da-da-da-daaa" pattern
+                            const victoryNotes = [
+                                { freq: 523, time: 0, duration: 0.15 }, // C5
+                                { freq: 659, time: 0.15, duration: 0.15 }, // E5
+                                { freq: 784, time: 0.3, duration: 0.15 }, // G5
+                                { freq: 1047, time: 0.45, duration: 0.4 }, // C6 (held longer)
+                            ];
+
+                            victoryNotes.forEach((note) => {
+                                const osc =
+                                    this.audioContext.createOscillator();
+                                const gain = this.audioContext.createGain();
+
+                                osc.connect(gain);
+                                gain.connect(this.audioContext.destination);
+
+                                osc.type = "square";
+                                osc.frequency.setValueAtTime(
+                                    note.freq,
+                                    now + note.time,
+                                );
+
+                                const volume = note.time === 0.45 ? 0.35 : 0.25; // Final note louder
+                                gain.gain.setValueAtTime(
+                                    volume,
+                                    now + note.time,
+                                );
+                                gain.gain.exponentialRampToValueAtTime(
+                                    0.01,
+                                    now + note.time + note.duration,
+                                );
+
+                                osc.start(now + note.time);
+                                osc.stop(now + note.time + note.duration);
+                            });
+                            return;
+
+                        case "powerup":
+                            // Powerup sound: magical ascending chime
+                            oscillator.type = "sine";
+                            oscillator.frequency.setValueAtTime(440, now);
+                            oscillator.frequency.exponentialRampToValueAtTime(
+                                880,
+                                now + 0.1,
+                            );
+                            oscillator.frequency.exponentialRampToValueAtTime(
+                                1760,
+                                now + 0.2,
+                            );
+
+                            gainNode.gain.setValueAtTime(0.25, now);
+                            gainNode.gain.exponentialRampToValueAtTime(
+                                0.01,
+                                now + 0.4,
+                            );
+
+                            oscillator.start(now);
+                            oscillator.stop(now + 0.4);
+                            break;
+
+                        case "dimensionShift":
+                            // Mario pipe-inspired: whoosh with pitch bend
+                            oscillator.type = "triangle";
+                            oscillator.frequency.setValueAtTime(440, now);
+                            oscillator.frequency.exponentialRampToValueAtTime(
+                                220,
+                                now + 0.2,
+                            );
+                            oscillator.frequency.exponentialRampToValueAtTime(
+                                330,
+                                now + 0.4,
+                            );
+
+                            gainNode.gain.setValueAtTime(0.2, now);
+                            gainNode.gain.exponentialRampToValueAtTime(
+                                0.01,
+                                now + 0.4,
+                            );
+
+                            oscillator.start(now);
+                            oscillator.stop(now + 0.4);
+                            break;
+                    }
+                }
+
+                createPortalDarkeningEffect() {
+                    // Create a darkening gradient that affects the area around the portal
+                    const portalX = WORLD_WIDTH - 60;
+                    const darkeningWidth = 200;
+
+                    // Create darkening overlay using multiple rectangles for gradient effect
+                    this.portalDarkening = this.add.graphics();
+
+                    const strips = 20;
+                    for (let i = 0; i < strips; i++) {
+                        const progress = i / (strips - 1);
+                        const alpha = progress * 0.6; // From 0 to 0.6 opacity
+                        const stripWidth = darkeningWidth / strips;
+
+                        this.portalDarkening.fillStyle(0x000000, alpha);
+                        this.portalDarkening.fillRect(
+                            portalX - darkeningWidth + stripWidth * i,
+                            0,
+                            stripWidth + 1,
+                            GAME_HEIGHT,
+                        );
+                    }
+
+                    // Send darkening behind portal but in front of platforms
+                    this.portalDarkening.setDepth(-1);
+                }
+
+                animatePortal() {
+                    if (!this.portal) return;
+
+                    // Pulsing glow effect
+                    this.tweens.add({
+                        targets: this.portalGlow,
+                        scaleX: { from: 1, to: 1.3 },
+                        scaleY: { from: 1, to: 1.3 },
+                        alpha: { from: 0.1, to: 0.3 },
+                        duration: 2000,
+                        yoyo: true,
+                        repeat: -1,
+                        ease: "Sine.easeInOut",
+                    });
+
+                    // Portal slight movement
+                    this.tweens.add({
+                        targets: this.portal,
+                        y: this.portal.y - 10,
+                        duration: 3000,
+                        yoyo: true,
+                        repeat: -1,
+                        ease: "Sine.easeInOut",
+                    });
+                }
+
+                preload() {
+                    this.createTextures();
+                }
+
+                createTextures() {
+                    // Player textures - standing
+                    const playerLight = this.add.graphics();
+                    playerLight.fillStyle(0xffffff);
+                    playerLight.fillRect(0, 0, 16, 16);
+                    playerLight.fillStyle(0x000000);
+                    playerLight.fillRect(6, 4, 2, 2); // Eyes
+                    playerLight.fillRect(12, 4, 2, 2);
+                    playerLight.fillRect(4, 10, 8, 2); // Mouth
+                    playerLight.generateTexture("player_light", 16, 16);
+                    playerLight.destroy();
+
+                    const playerDark = this.add.graphics();
+                    playerDark.fillStyle(0x444444);
+                    playerDark.fillRect(0, 0, 16, 16);
+                    playerDark.fillStyle(0xffffff);
+                    playerDark.fillRect(6, 4, 2, 2); // Eyes
+                    playerDark.fillRect(12, 4, 2, 2);
+                    playerDark.fillRect(4, 10, 8, 2); // Mouth
+                    playerDark.generateTexture("player_dark", 16, 16);
+                    playerDark.destroy();
+
+                    // Player textures - jumping (eyes wider, mouth open)
+                    const playerLightJump = this.add.graphics();
+                    playerLightJump.fillStyle(0xffffff);
+                    playerLightJump.fillRect(0, 0, 16, 16);
+                    playerLightJump.fillStyle(0x000000);
+                    playerLightJump.fillRect(5, 3, 3, 3); // Wider eyes
+                    playerLightJump.fillRect(11, 3, 3, 3);
+                    playerLightJump.fillRect(6, 9, 4, 3); // Open mouth
+                    playerLightJump.generateTexture(
+                        "player_light_jump",
+                        16,
+                        16,
+                    );
+                    playerLightJump.destroy();
+
+                    const playerDarkJump = this.add.graphics();
+                    playerDarkJump.fillStyle(0x444444);
+                    playerDarkJump.fillRect(0, 0, 16, 16);
+                    playerDarkJump.fillStyle(0xffffff);
+                    playerDarkJump.fillRect(5, 3, 3, 3); // Wider eyes
+                    playerDarkJump.fillRect(11, 3, 3, 3);
+                    playerDarkJump.fillRect(6, 9, 4, 3); // Open mouth
+                    playerDarkJump.generateTexture("player_dark_jump", 16, 16);
+                    playerDarkJump.destroy();
+
+                    // Platform textures
+                    const platformLight = this.add.graphics();
+                    platformLight.fillStyle(0x90ee90);
+                    platformLight.fillRect(0, 0, 16, 16);
+                    platformLight.generateTexture("platform_light", 16, 16);
+                    platformLight.destroy();
+
+                    const platformDark = this.add.graphics();
+                    platformDark.fillStyle(0x800080);
+                    platformDark.fillRect(0, 0, 16, 16);
+                    platformDark.generateTexture("platform_dark", 16, 16);
+                    platformDark.destroy();
+
+                    // Collectible textures
+                    const collectibleLight = this.add.graphics();
+                    collectibleLight.fillStyle(0xffd700);
+                    collectibleLight.fillRect(0, 0, 8, 8);
+                    collectibleLight.generateTexture("collectible_light", 8, 8);
+                    collectibleLight.destroy();
+
+                    const collectibleDark = this.add.graphics();
+                    collectibleDark.fillStyle(0xff69b4);
+                    collectibleDark.fillRect(0, 0, 8, 8);
+                    collectibleDark.generateTexture("collectible_dark", 8, 8);
+                    collectibleDark.destroy();
+
+                    // Hazard texture
+                    const hazard = this.add.graphics();
+                    hazard.fillStyle(0xff0000);
+                    hazard.fillRect(0, 0, 12, 12);
+                    hazard.generateTexture("hazard", 12, 12);
+                    hazard.destroy();
+
+                    // Powerup textures
+                    const speedPowerup = this.add.graphics();
+                    speedPowerup.fillStyle(0x00ffff); // Cyan
+                    speedPowerup.fillRect(0, 0, 12, 12);
+                    speedPowerup.fillStyle(0xffffff);
+                    speedPowerup.fillRect(2, 4, 8, 4); // Speed lines
+                    speedPowerup.generateTexture("speed_powerup", 12, 12);
+                    speedPowerup.destroy();
+
+                    const jumpPowerup = this.add.graphics();
+                    jumpPowerup.fillStyle(0xff00ff); // Magenta
+                    jumpPowerup.fillRect(0, 0, 12, 12);
+                    jumpPowerup.fillStyle(0xffffff);
+                    jumpPowerup.fillRect(4, 2, 4, 8); // Up arrow
+                    jumpPowerup.fillRect(2, 6, 8, 2);
+                    jumpPowerup.generateTexture("jump_powerup", 12, 12);
+                    jumpPowerup.destroy();
+
+                    // Life powerup texture - heart shape
+                    const lifePowerup = this.add.graphics();
+                    lifePowerup.fillStyle(0xff0080); // Pink/red
+                    lifePowerup.fillRect(0, 0, 12, 12);
+                    lifePowerup.fillStyle(0xff69b4); // Bright pink heart
+                    // Draw a simple heart shape using rectangles
+                    lifePowerup.fillRect(2, 4, 2, 2); // Left top
+                    lifePowerup.fillRect(5, 4, 2, 2); // Right top
+                    lifePowerup.fillRect(8, 4, 2, 2); // Far right top
+                    lifePowerup.fillRect(3, 6, 6, 2); // Middle
+                    lifePowerup.fillRect(4, 8, 4, 2); // Bottom
+                    lifePowerup.fillRect(5, 10, 2, 1); // Point
+                    lifePowerup.generateTexture("life_powerup", 12, 12);
+                    lifePowerup.destroy();
+
+                    // Portal texture - full height with gradient effect using multiple rectangles
+                    const portal = this.add.graphics();
+                    const portalWidth = 40;
+                    const strips = 10; // Number of gradient strips
+
+                    for (let i = 0; i < strips; i++) {
+                        const progress = i / (strips - 1);
+                        // Create gradient from bright green to dark green
+                        const greenValue = Math.floor(
+                            255 * (1 - progress * 0.8),
+                        );
+                        const color = greenValue << 8; // Green channel only
+
+                        portal.fillStyle(color);
+                        portal.fillRect(
+                            (portalWidth / strips) * i,
+                            0,
+                            portalWidth / strips + 1,
+                            GAME_HEIGHT,
+                        );
+                    }
+                    portal.generateTexture("portal", portalWidth, GAME_HEIGHT);
+                    portal.destroy();
+
+                    // Portal particles texture
+                    const portalParticle = this.add.graphics();
+                    portalParticle.fillStyle(0x00ff00);
+                    portalParticle.fillRect(0, 0, 3, 3);
+                    portalParticle.generateTexture("portal_particle", 3, 3);
+                    portalParticle.destroy();
+
+                    // Particle texture
+                    const particle = this.add.graphics();
+                    particle.fillStyle(0xffffff);
+                    particle.fillRect(0, 0, 4, 4);
+                    particle.generateTexture("particle", 4, 4);
+                    particle.destroy();
+
+                    // Trail particle textures
+                    const trailParticleLight = this.add.graphics();
+                    trailParticleLight.fillStyle(0x5f5fff);
+                    trailParticleLight.fillRect(0, 0, 2, 2);
+                    trailParticleLight.generateTexture(
+                        "trail_particle_light",
+                        2,
+                        2,
+                    );
+                    trailParticleLight.destroy();
+
+                    const trailParticleDark = this.add.graphics();
+                    trailParticleDark.fillStyle(0xff5f5f);
+                    trailParticleDark.fillRect(0, 0, 2, 2);
+                    trailParticleDark.generateTexture(
+                        "trail_particle_dark",
+                        2,
+                        2,
+                    );
+                    trailParticleDark.destroy();
+
+                    // Powerup trail particles
+                    const speedTrailParticle = this.add.graphics();
+                    speedTrailParticle.fillStyle(0x00ffff); // Cyan for speed
+                    speedTrailParticle.fillRect(0, 0, 3, 3);
+                    speedTrailParticle.generateTexture(
+                        "speed_trail_particle",
+                        3,
+                        3,
+                    );
+                    speedTrailParticle.destroy();
+
+                    const jumpTrailParticle = this.add.graphics();
+                    jumpTrailParticle.fillStyle(0xff00ff); // Magenta for jump
+                    jumpTrailParticle.fillRect(0, 0, 3, 3);
+                    jumpTrailParticle.generateTexture(
+                        "jump_trail_particle",
+                        3,
+                        3,
+                    );
+                    jumpTrailParticle.destroy();
+
+                    const lifeTrailParticle = this.add.graphics();
+                    lifeTrailParticle.fillStyle(0xff69b4); // Pink for life (though life doesn't have trail)
+                    lifeTrailParticle.fillRect(0, 0, 3, 3);
+                    lifeTrailParticle.generateTexture(
+                        "life_trail_particle",
+                        3,
+                        3,
+                    );
+                    lifeTrailParticle.destroy();
+                }
+
+                create() {
+                    this.level = 1;
+                    this.score = 0;
+                    this.lives = 3;
+                    this.dimension = 0;
+                    this.levelTransitioning = false;
+
+                    // Powerup state
+                    this.speedBoostActive = false;
+                    this.jumpBoostActive = false;
+                    this.speedBoostTimer = 0;
+                    this.jumpBoostTimer = 0;
+                    this.currentPlayerSpeed = PLAYER_SPEED;
+                    this.currentJumpVelocity = JUMP_VELOCITY;
+
+                    // Screen shake variables
+                    this.shakeTimer = 0;
+                    this.shakeIntensity = 0;
+                    this.originalCameraX = 0;
+                    this.originalCameraY = 0;
+
+                    // Initialize audio system
+                    this.createAudioContext();
+
+                    this.physics.world.setBounds(
+                        0,
+                        0,
+                        WORLD_WIDTH,
+                        GAME_HEIGHT,
+                    );
+
+                    this.background = this.add.rectangle(
+                        WORLD_WIDTH / 2,
+                        GAME_HEIGHT / 2,
+                        WORLD_WIDTH,
+                        GAME_HEIGHT,
+                        0x87ceeb,
+                    );
+                    this.background.setScrollFactor(0.1);
+
+                    this.player = this.physics.add.sprite(
+                        50,
+                        200,
+                        "player_light",
+                    );
+                    this.player.setBounce(0.2);
+                    this.player.jumpState = "none";
+                    this.player.animationState = "standing"; // Track animation state
+
+                    this.platforms = this.physics.add.staticGroup();
+                    this.collectibles = this.physics.add.group();
+                    this.hazards = this.add.group();
+                    this.powerups = this.add.group();
+
+                    this.portal = null;
+
+                    this.particles = this.add.particles(0, 0, "particle", {
+                        speed: { min: 50, max: 150 },
+                        scale: { start: 1, end: 0 },
+                        lifespan: 600,
+                        emitting: false,
+                    });
+
+                    // Portal particle system - emit from whole portal area
+                    this.portalParticles = this.add.particles(
+                        0,
+                        0,
+                        "portal_particle",
+                        {
+                            speed: { min: 30, max: 80 },
+                            scale: { start: 2, end: 0 },
+                            lifespan: 1000,
+                            frequency: 50,
+                            emitting: false,
+                            alpha: { start: 1, end: 0 },
+                            quantity: 3,
+                            blendMode: "ADD",
+                            gravityY: -100,
+                            angle: { min: 160, max: 200 }, // Particles flow upward and slightly left
+                            emitZone: {
+                                source: new Phaser.Geom.Rectangle(
+                                    -20,
+                                    -GAME_HEIGHT / 2,
+                                    40,
+                                    GAME_HEIGHT,
+                                ),
+                                type: "random",
+                            },
+                        },
+                    );
+
+                    this.playerTrail = this.add.particles(
+                        0,
+                        0,
+                        "trail_particle_light",
+                        {
+                            speed: { min: 20, max: 50 },
+                            scale: { start: 1.5, end: 0 },
+                            lifespan: 300,
+                            frequency: 30,
+                            emitting: false,
+                            alpha: { start: 0.8, end: 0 },
+                            quantity: 2,
+                            blendMode: "ADD",
+                            angle: { min: -30, max: 30 },
+                            gravityY: 0,
+                        },
+                    );
+
+                    this.generateLevel();
+
+                    this.physics.add.collider(this.player, this.platforms);
+                    // Add physics collision between collectibles and platforms to prevent falling
+                    this.physics.add.collider(
+                        this.collectibles,
+                        this.platforms,
+                    );
+
+                    this.cursors = this.input.keyboard.createCursorKeys();
+                    this.spaceKey = this.input.keyboard.addKey(
+                        Phaser.Input.Keyboard.KeyCodes.SPACE,
+                    );
+                    this.wasd = this.input.keyboard.addKeys("W,S,A,D");
+
+                    this.cameras.main.setBounds(0, 0, WORLD_WIDTH, GAME_HEIGHT);
+                    this.cameras.main.startFollow(
+                        this.player,
+                        true,
+                        0.08,
+                        0.08,
+                    );
+
+                    this.createUI();
+                }
+
+                createUI() {
+                    this.scoreText = this.add
+                        .text(16, 16, "Score: 0", {
+                            fontSize: "18px",
+                            fill: "#fff",
+                        })
+                        .setScrollFactor(0);
+
+                    this.livesText = this.add
+                        .text(16, 40, "Lives: 3", {
+                            fontSize: "18px",
+                            fill: "#fff",
+                        })
+                        .setScrollFactor(0);
+
+                    this.dimensionText = this.add
+                        .text(16, 64, "Dimension: Light", {
+                            fontSize: "18px",
+                            fill: "#5f5fff",
+                        })
+                        .setScrollFactor(0);
+
+                    this.levelText = this.add
+                        .text(GAME_WIDTH - 120, 16, "Level: 1", {
+                            fontSize: "18px",
+                            fill: "#fff",
+                        })
+                        .setScrollFactor(0);
+                }
+
+                update() {
+                    if (!this.player || !this.player.body) return;
+
+                    const playerSpeed =
+                        Math.abs(this.player.body.velocity.x) +
+                        Math.abs(this.player.body.velocity.y);
+                    const isMoving = playerSpeed > 20;
+
+                    // Movement controls
+                    if (this.cursors.left.isDown || this.wasd.A.isDown) {
+                        this.player.setVelocityX(-this.currentPlayerSpeed);
+                    } else if (
+                        this.cursors.right.isDown ||
+                        this.wasd.D.isDown
+                    ) {
+                        this.player.setVelocityX(this.currentPlayerSpeed);
+                    } else {
+                        this.player.setVelocityX(0);
+                    }
+
+                    // Jumping
+                    const isOnGround = this.player.body.touching.down;
+                    if (
+                        (this.cursors.up.isDown || this.wasd.W.isDown) &&
+                        isOnGround
+                    ) {
+                        this.player.setVelocityY(-this.currentJumpVelocity);
+                        this.player.jumpState = "rising";
+                        // Play jump sound
+                        this.playSound("jump");
+                    }
+
+                    // Variable gravity and animation updates
+                    if (
+                        this.player.jumpState === "rising" &&
+                        this.player.body.velocity.y >= 0
+                    ) {
+                        this.player.jumpState = "falling";
+                        this.player.body.setGravityY(GRAVITY);
+                    } else if (
+                        this.player.jumpState === "falling" &&
+                        this.player.body.touching.down
+                    ) {
+                        this.player.jumpState = "none";
+                        this.player.body.setGravityY(0);
+                    } else if (
+                        this.player.jumpState === "none" &&
+                        !this.player.body.touching.down
+                    ) {
+                        this.player.jumpState = "falling";
+                        this.player.body.setGravityY(GRAVITY);
+                    }
+
+                    // Update player animation based on state
+                    this.updatePlayerAnimation();
+
+                    // Trail effect with powerup colors
+                    if (isMoving) {
+                        const offsetX =
+                            this.player.body.velocity.x > 0 ? -8 : 8;
+                        this.playerTrail.setPosition(
+                            this.player.x + offsetX,
+                            this.player.y + 8,
+                        );
+
+                        // Determine trail texture based on active powerups and dimension
+                        let trailTexture;
+                        if (this.speedBoostActive) {
+                            trailTexture = "speed_trail_particle"; // Cyan trail for speed boost
+                        } else if (this.jumpBoostActive) {
+                            trailTexture = "jump_trail_particle"; // Magenta trail for jump boost
+                        } else {
+                            // Normal dimension-based trail
+                            trailTexture =
+                                this.dimension === 0
+                                    ? "trail_particle_light"
+                                    : "trail_particle_dark";
+                        }
+
+                        if (this.playerTrail.texture.key !== trailTexture) {
+                            this.playerTrail.destroy();
+                            this.playerTrail = this.add.particles(
+                                this.player.x + offsetX,
+                                this.player.y + 8,
+                                trailTexture,
+                                {
+                                    speed: { min: 20, max: 50 },
+                                    scale: {
+                                        start: this.speedBoostActive ? 2 : 1.5,
+                                        end: 0,
+                                    }, // Bigger particles for speed boost
+                                    lifespan: this.speedBoostActive ? 400 : 300, // Longer lasting for speed boost
+                                    frequency: this.speedBoostActive ? 20 : 30, // More frequent for speed boost
+                                    emitting: true,
+                                    alpha: { start: 0.9, end: 0 },
+                                    quantity: this.speedBoostActive ? 3 : 2, // More particles for speed boost
+                                    blendMode: "ADD",
+                                    angle: { min: -30, max: 30 },
+                                    gravityY: 0,
+                                },
+                            );
+                        } else {
+                            if (!this.playerTrail.emitting) {
+                                this.playerTrail.start();
+                            }
+                        }
+                    } else {
+                        if (this.playerTrail.emitting) {
+                            this.playerTrail.stop();
+                        }
+                    }
+
+                    // Dimension shift
+                    if (Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
+                        this.shiftDimension();
+                        this.playSound("dimensionShift");
+                    }
+
+                    // Death check
+                    if (this.player.y > GAME_HEIGHT - 10) {
+                        this.hitHazard(this.player, null);
+                        return;
+                    }
+
+                    // Portal collision
+                    if (
+                        this.portal &&
+                        this.portal.visible &&
+                        !this.levelTransitioning &&
+                        Phaser.Geom.Intersects.RectangleToRectangle(
+                            this.player.getBounds(),
+                            this.portal.getBounds(),
+                        )
+                    ) {
+                        this.levelTransitioning = true;
+                        this.nextLevel();
+                    }
+
+                    // Collectible collisions
+                    this.collectibles.children.entries.forEach(
+                        (collectible) => {
+                            if (
+                                collectible.visible &&
+                                !collectible.collected &&
+                                Phaser.Geom.Intersects.RectangleToRectangle(
+                                    this.player.getBounds(),
+                                    collectible.getBounds(),
+                                )
+                            ) {
+                                if (
+                                    this.checkCollectibleVisibility(
+                                        this.player,
+                                        collectible,
+                                    )
+                                ) {
+                                    this.collectItem(this.player, collectible);
+                                }
+                            }
+                        },
+                    );
+
+                    // Powerup collisions
+                    this.powerups.children.entries.forEach((powerup) => {
+                        if (
+                            powerup.visible &&
+                            !powerup.collected &&
+                            Phaser.Geom.Intersects.RectangleToRectangle(
+                                this.player.getBounds(),
+                                powerup.getBounds(),
+                            )
+                        ) {
+                            if (
+                                this.checkPowerupVisibility(
+                                    this.player,
+                                    powerup,
+                                )
+                            ) {
+                                this.collectPowerup(this.player, powerup);
+                            }
+                        }
+                    });
+
+                    // Hazard collisions
+                    this.hazards.children.entries.forEach((hazard) => {
+                        if (
+                            hazard.visible &&
+                            Phaser.Geom.Intersects.RectangleToRectangle(
+                                this.player.getBounds(),
+                                hazard.getBounds(),
+                            )
+                        ) {
+                            if (
+                                this.checkHazardVisibility(this.player, hazard)
+                            ) {
+                                this.hitHazard(this.player, hazard);
+                            }
+                        }
+                    });
+
+                    this.updateVisibility();
+
+                    // Update powerup timers
+                    this.updatePowerups();
+
+                    // Update screen shake
+                    this.updateScreenShake();
+
+                    // Moving hazards for higher levels
+                    if (this.level >= 3) {
+                        this.hazards.children.entries.forEach((hazard) => {
+                            if (hazard.moveSpeed) {
+                                hazard.x += hazard.moveSpeed;
+                                if (
+                                    hazard.x <= hazard.startX - 50 ||
+                                    hazard.x >= hazard.startX + 50
+                                ) {
+                                    hazard.moveSpeed *= -1;
+                                }
+                            }
+                        });
+                    }
+                }
+
+                // NEW: Enhanced level generation with path validation
+                generateLevel() {
+                    this.platforms.clear(true, true);
+                    this.collectibles.clear(true, true);
+                    this.hazards.clear(true, true);
+                    this.powerups.clear(true, true);
+
+                    if (this.portal) {
+                        this.portal.destroy();
+                        this.portal = null;
+                    }
+                    if (this.portalGlow) {
+                        this.portalGlow.destroy();
+                        this.portalGlow = null;
+                    }
+                    if (this.portalDarkening) {
+                        this.portalDarkening.destroy();
+                        this.portalDarkening = null;
+                    }
+                    if (this.portalParticles) {
+                        this.portalParticles.stop();
+                    }
+
+                    this.player.setPosition(50, 200);
+                    this.player.setVelocity(0, 0);
+                    this.levelTransitioning = false;
+
+                    // Create starting platform
+                    for (let x = 0; x < 100; x += 16) {
+                        const platform = this.platforms.create(
+                            x,
+                            250,
+                            "platform_light",
+                        );
+                        platform.dimension = 2; // Visible in both dimensions
+                        platform.refreshBody();
+                    }
+
+                    // Generate level with guaranteed path
+                    this.generateGuaranteedPath();
+
+                    // Add collectibles
+                    this.addCollectibles();
+
+                    // Add powerups
+                    this.addPowerups();
+
+                    // Add hazards for higher levels
+                    if (this.level >= 2) {
+                        this.addHazards();
+                    }
+                }
+
+                generateGuaranteedPath() {
+                    // Much simpler approach - create platforms at regular intervals across the entire world
+                    const startX = 150;
+                    const endX = WORLD_WIDTH - 200; // Leave room for portal platforms
+                    const platformSpacing = 180; // Distance between platform centers
+
+                    let currentX = startX;
+
+                    while (currentX < endX) {
+                        // Create platforms for both dimensions at this X position
+                        const lightY = 150 + Math.sin(currentX / 400) * 100;
+                        const darkY = 200 + Math.cos(currentX / 350) * 80;
+
+                        // Clamp Y positions to safe bounds
+                        const clampedLightY = Phaser.Math.Clamp(
+                            lightY,
+                            80,
+                            GAME_HEIGHT - 80,
+                        );
+                        const clampedDarkY = Phaser.Math.Clamp(
+                            darkY,
+                            80,
+                            GAME_HEIGHT - 80,
+                        );
+
+                        // Create light dimension platform
+                        const lightWidth = Phaser.Math.Between(80, 120);
+                        const lightPlatformCount = Math.ceil(lightWidth / 16);
+                        for (let j = 0; j < lightPlatformCount; j++) {
+                            const platform = this.platforms.create(
+                                currentX + j * 16,
+                                clampedLightY,
+                                "platform_light",
+                            );
+                            platform.dimension = 0;
+                            platform.refreshBody();
+                        }
+
+                        // Create dark dimension platform (offset slightly)
+                        const darkWidth = Phaser.Math.Between(80, 120);
+                        const darkPlatformCount = Math.ceil(darkWidth / 16);
+                        const darkOffsetX =
+                            currentX + Phaser.Math.Between(-40, 40);
+                        for (let j = 0; j < darkPlatformCount; j++) {
+                            const platform = this.platforms.create(
+                                darkOffsetX + j * 16,
+                                clampedDarkY,
+                                "platform_dark",
+                            );
+                            platform.dimension = 1;
+                            platform.refreshBody();
+                        }
+
+                        currentX += platformSpacing;
+
+                        // Reduce spacing as we progress to ensure we reach the end
+                        if (
+                            currentX + platformSpacing * 2 > endX &&
+                            currentX < endX
+                        ) {
+                            currentX = endX - platformSpacing;
+                        }
+                    }
+
+                    // Ensure there's a platform near the portal
+                    const portalPlatformLight = this.platforms.create(
+                        WORLD_WIDTH - 120,
+                        200,
+                        "platform_light",
+                    );
+                    portalPlatformLight.dimension = 0;
+                    portalPlatformLight.refreshBody();
+
+                    const portalPlatformDark = this.platforms.create(
+                        WORLD_WIDTH - 90,
+                        150,
+                        "platform_dark",
+                    );
+                    portalPlatformDark.dimension = 1;
+                    portalPlatformDark.refreshBody();
+
+                    // CREATE THE PORTAL HERE!
+                    this.portal = this.add.sprite(
+                        WORLD_WIDTH - 60,
+                        GAME_HEIGHT / 2,
+                        "portal",
+                    );
+                    this.portal.setOrigin(0.5, 0.5);
+
+                    // Add portal glow effect
+                    this.portalGlow = this.add.circle(
+                        WORLD_WIDTH - 60,
+                        GAME_HEIGHT / 2,
+                        80,
+                        0x00ff00,
+                        0.1,
+                    );
+                    this.portalGlow.setBlendMode(Phaser.BlendModes.ADD);
+
+                    // Start portal particle emission - particles will emit from the whole portal area
+                    this.portalParticles.setPosition(
+                        WORLD_WIDTH - 60,
+                        GAME_HEIGHT / 2,
+                    );
+                    this.portalParticles.start();
+
+                    // Create darkening effect around portal
+                    this.createPortalDarkeningEffect();
+
+                    // Start portal animation
+                    this.animatePortal();
+                }
+
+                addCollectibles() {
+                    this.platforms.children.entries.forEach((platform) => {
+                        if (Math.random() < 0.3 && platform.dimension !== 2) {
+                            const collectible = this.physics.add.sprite(
+                                platform.x + Phaser.Math.Between(-10, 10),
+                                platform.y - 20,
+                                platform.dimension === 0
+                                    ? "collectible_light"
+                                    : "collectible_dark",
+                            );
+                            collectible.dimension = platform.dimension;
+                            collectible.collected = false;
+                            // Remove negative gravity - let collectibles use normal physics
+                            collectible.setBounce(0.3);
+                            this.collectibles.add(collectible);
+                        }
+                    });
+                }
+
+                addPowerups() {
+                    // Shuffle platforms to get random selection
+                    const availablePlatforms =
+                        this.platforms.children.entries.filter(
+                            (p) => p.dimension !== 2,
+                        );
+                    const shuffled = Phaser.Utils.Array.Shuffle([
+                        ...availablePlatforms,
+                    ]);
+
+                    // ALWAYS add exactly 1 life powerup per level
+                    if (shuffled.length > 0) {
+                        const lifePlatform = shuffled[0]; // First platform gets the life powerup
+                        const lifePowerup = this.add.sprite(
+                            lifePlatform.x + Phaser.Math.Between(-10, 10),
+                            lifePlatform.y - 25,
+                            "life_powerup",
+                        );
+                        lifePowerup.dimension = lifePlatform.dimension;
+                        lifePowerup.powerupType = "life";
+                        lifePowerup.collected = false;
+
+                        // Add floating animation
+                        this.tweens.add({
+                            targets: lifePowerup,
+                            y: lifePowerup.y - 5,
+                            duration: 1000,
+                            yoyo: true,
+                            repeat: -1,
+                            ease: "Sine.easeInOut",
+                        });
+
+                        this.powerups.add(lifePowerup);
+                    }
+
+                    // Optionally add 0-1 additional speed/jump powerups
+                    let additionalPowerups = 0;
+                    const maxAdditional = Math.random() < 0.5 ? 0 : 1; // 50% chance for 1 extra
+
+                    for (
+                        let i = 1;
+                        i < shuffled.length &&
+                        additionalPowerups < maxAdditional;
+                        i++
+                    ) {
+                        if (Math.random() < 0.4) {
+                            // 40% chance to place additional powerup
+                            const powerupType =
+                                Math.random() < 0.5 ? "speed" : "jump";
+                            const texture =
+                                powerupType === "speed"
+                                    ? "speed_powerup"
+                                    : "jump_powerup";
+
+                            const powerup = this.add.sprite(
+                                shuffled[i].x + Phaser.Math.Between(-10, 10),
+                                shuffled[i].y - 25,
+                                texture,
+                            );
+                            powerup.dimension = shuffled[i].dimension;
+                            powerup.powerupType = powerupType;
+                            powerup.collected = false;
+
+                            // Add floating animation
+                            this.tweens.add({
+                                targets: powerup,
+                                y: powerup.y - 5,
+                                duration: 1000,
+                                yoyo: true,
+                                repeat: -1,
+                                ease: "Sine.easeInOut",
+                            });
+
+                            this.powerups.add(powerup);
+                            additionalPowerups++;
+                        }
+                    }
+                }
+
+                updatePowerups() {
+                    // Update speed boost timer
+                    if (this.speedBoostActive) {
+                        this.speedBoostTimer -= 16; // Roughly 60fps
+                        if (this.speedBoostTimer <= 0) {
+                            this.speedBoostActive = false;
+                            this.currentPlayerSpeed = PLAYER_SPEED;
+                        }
+                    }
+
+                    // Update jump boost timer
+                    if (this.jumpBoostActive) {
+                        this.jumpBoostTimer -= 16;
+                        if (this.jumpBoostTimer <= 0) {
+                            this.jumpBoostActive = false;
+                            this.currentJumpVelocity = JUMP_VELOCITY;
+                        }
+                    }
+                }
+
+                updateScreenShake() {
+                    if (this.shakeTimer > 0) {
+                        this.shakeTimer -= 16; // Roughly 60fps
+
+                        // Calculate shake offset - gets weaker over time
+                        const progress = this.shakeTimer / 300; // Normalize to 0-1
+                        const currentIntensity = this.shakeIntensity * progress;
+
+                        const shakeX = (Math.random() - 0.5) * currentIntensity;
+                        const shakeY = (Math.random() - 0.5) * currentIntensity;
+
+                        this.cameras.main.setScroll(
+                            this.originalCameraX + shakeX,
+                            this.originalCameraY + shakeY,
+                        );
+
+                        if (this.shakeTimer <= 0) {
+                            // Reset camera to normal position
+                            this.cameras.main.setScroll(
+                                this.originalCameraX,
+                                this.originalCameraY,
+                            );
+                        }
+                    } else {
+                        // Update original camera position when not shaking (for following player)
+                        this.originalCameraX = this.cameras.main.scrollX;
+                        this.originalCameraY = this.cameras.main.scrollY;
+                    }
+                }
+
+                updatePlayerAnimation() {
+                    const isJumping =
+                        this.player.jumpState === "rising" ||
+                        this.player.jumpState === "falling";
+                    const newAnimationState = isJumping
+                        ? "jumping"
+                        : "standing";
+
+                    // Only update texture if animation state changed
+                    if (this.player.animationState !== newAnimationState) {
+                        this.player.animationState = newAnimationState;
+
+                        let newTexture;
+                        if (isJumping) {
+                            newTexture =
+                                this.dimension === 0
+                                    ? "player_light_jump"
+                                    : "player_dark_jump";
+                        } else {
+                            newTexture =
+                                this.dimension === 0
+                                    ? "player_light"
+                                    : "player_dark";
+                        }
+
+                        this.player.setTexture(newTexture);
+                    }
+                }
+
+                checkPowerupVisibility(player, powerup) {
+                    return (
+                        powerup.dimension === this.dimension ||
+                        powerup.dimension === 2
+                    );
+                }
+
+                addHazards() {
+                    const hazardCount = Math.min(this.level, 5);
+
+                    for (let i = 0; i < hazardCount; i++) {
+                        const x = Phaser.Math.Between(200, WORLD_WIDTH - 200);
+                        const y = Phaser.Math.Between(100, GAME_HEIGHT - 100);
+                        const dimension = Math.random() < 0.5 ? 0 : 1;
+
+                        const hazard = this.add.sprite(x, y, "hazard");
+                        hazard.dimension = dimension;
+
+                        if (this.level >= 3) {
+                            hazard.moveSpeed =
+                                Phaser.Math.Between(1, 3) *
+                                (Math.random() < 0.5 ? 1 : -1);
+                            hazard.startX = x;
+                        }
+
+                        this.hazards.add(hazard);
+                    }
+                }
+
+                shiftDimension() {
+                    this.dimension = 1 - this.dimension;
+
+                    // Update player texture based on current animation state
+                    let newTexture;
+                    if (this.player.animationState === "jumping") {
+                        newTexture =
+                            this.dimension === 0
+                                ? "player_light_jump"
+                                : "player_dark_jump";
+                    } else {
+                        newTexture =
+                            this.dimension === 0
+                                ? "player_light"
+                                : "player_dark";
+                    }
+                    this.player.setTexture(newTexture);
+
+                    this.dimensionText.setText(
+                        "Dimension: " +
+                            (this.dimension === 0 ? "Light" : "Dark"),
+                    );
+                    this.dimensionText.setFill(
+                        this.dimension === 0 ? "#5f5fff" : "#ff5f5f",
+                    );
+
+                    if (this.dimension === 0) {
+                        this.background.setFillStyle(0x87ceeb);
+                        this.cameras.main.setBackgroundColor("#87CEEB");
+                    } else {
+                        this.background.setFillStyle(0x2f1b3c);
+                        this.cameras.main.setBackgroundColor("#2F1B3C");
+                    }
+
+                    this.particles.emitParticleAt(
+                        this.player.x,
+                        this.player.y,
+                        20,
+                    );
+
+                    this.updateVisibility();
+                }
+
+                updateVisibility() {
+                    this.platforms.children.entries.forEach((platform) => {
+                        const visible =
+                            platform.dimension === this.dimension ||
+                            platform.dimension === 2;
+                        platform.setVisible(visible);
+                        platform.body.enable = visible;
+                    });
+
+                    this.collectibles.children.entries.forEach(
+                        (collectible) => {
+                            const visible =
+                                !collectible.collected &&
+                                (collectible.dimension === this.dimension ||
+                                    collectible.dimension === 2);
+                            collectible.setVisible(visible);
+                            // Enable/disable physics body for collectibles based on visibility
+                            if (collectible.body) {
+                                collectible.body.enable = visible;
+                            }
+                        },
+                    );
+
+                    this.hazards.children.entries.forEach((hazard) => {
+                        const visible =
+                            hazard.dimension === this.dimension ||
+                            hazard.dimension === 2;
+                        hazard.setVisible(visible);
+                    });
+
+                    this.powerups.children.entries.forEach((powerup) => {
+                        const visible =
+                            !powerup.collected &&
+                            (powerup.dimension === this.dimension ||
+                                powerup.dimension === 2);
+                        powerup.setVisible(visible);
+                    });
+
+                    if (this.portal) {
+                        this.portal.setVisible(true);
+                        if (this.portalGlow) this.portalGlow.setVisible(true);
+                        if (this.portalDarkening)
+                            this.portalDarkening.setVisible(true);
+                    }
+                }
+
+                checkCollectibleVisibility(player, collectible) {
+                    return (
+                        collectible.dimension === this.dimension ||
+                        collectible.dimension === 2
+                    );
+                }
+
+                checkHazardVisibility(player, hazard) {
+                    return (
+                        hazard.dimension === this.dimension ||
+                        hazard.dimension === 2
+                    );
+                }
+
+                collectItem(player, collectible) {
+                    collectible.collected = true;
+                    collectible.setVisible(false);
+                    // Disable physics body when collected
+                    if (collectible.body) {
+                        collectible.body.enable = false;
+                    }
+
+                    this.score += 10;
+                    this.scoreText.setText("Score: " + this.score);
+
+                    this.particles.emitParticleAt(
+                        collectible.x,
+                        collectible.y,
+                        10,
+                    );
+
+                    // Play collection sound
+                    this.playSound("collect");
+                }
+
+                hitHazard(player, hazard) {
+                    this.lives--;
+                    this.livesText.setText("Lives: " + this.lives);
+
+                    this.particles.emitParticleAt(player.x, player.y, 30);
+
+                    // Trigger screen shake on damage
+                    this.screenShake(15, 300); // 15 pixel intensity, 300ms duration
+
+                    player.setPosition(50, 200);
+                    player.setVelocity(0, 0);
+
+                    // Reset powerup effects when player dies
+                    this.speedBoostActive = false;
+                    this.jumpBoostActive = false;
+                    this.speedBoostTimer = 0;
+                    this.jumpBoostTimer = 0;
+                    this.currentPlayerSpeed = PLAYER_SPEED;
+                    this.currentJumpVelocity = JUMP_VELOCITY;
+
+                    // Play damage sound
+                    this.playSound("damage");
+
+                    if (this.lives <= 0) {
+                        this.gameOver();
+                    }
+                }
+
+                collectPowerup(player, powerup) {
+                    powerup.collected = true;
+                    powerup.setVisible(false);
+
+                    this.particles.emitParticleAt(powerup.x, powerup.y, 15);
+                    this.playSound("powerup");
+
+                    if (powerup.powerupType === "speed") {
+                        this.score += 25;
+                        this.speedBoostActive = true;
+                        this.speedBoostTimer = 8000;
+                        this.currentPlayerSpeed = PLAYER_SPEED * 1.5;
+                    } else if (powerup.powerupType === "jump") {
+                        this.score += 25;
+                        this.jumpBoostActive = true;
+                        this.jumpBoostTimer = 8000;
+                        this.currentJumpVelocity = JUMP_VELOCITY * 1.3;
+                    } else if (powerup.powerupType === "life") {
+                        this.score += 50; // Life powerups worth more points!
+                        this.lives++;
+                        this.livesText.setText("Lives: " + this.lives);
+                    }
+
+                    this.scoreText.setText("Score: " + this.score);
+                }
+
+                nextLevel() {
+                    if (this.portal) {
+                        this.portal.setVisible(false);
+                    }
+
+                    // Play level completion sound
+                    this.playSound("levelComplete");
+
+                    // Add 1 life for completing the level
+                    this.lives++;
+                    this.livesText.setText("Lives: " + this.lives);
+
+                    const completedLevel = this.level;
+                    this.level++;
+                    this.levelText.setText("Level: " + this.level);
+
+                    const overlay = this.add
+                        .rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.7)
+                        .setOrigin(0)
+                        .setScrollFactor(0);
+
+                    const levelText = this.add
+                        .text(
+                            GAME_WIDTH / 2,
+                            GAME_HEIGHT / 2 - 20,
+                            `Level ${completedLevel} Complete!`,
+                            { fontSize: "24px", fill: "#ffffff" },
+                        )
+                        .setOrigin(0.5)
+                        .setScrollFactor(0);
+
+                    const scoreText = this.add
+                        .text(
+                            GAME_WIDTH / 2,
+                            GAME_HEIGHT / 2 + 10,
+                            `Score: ${this.score}`,
+                            { fontSize: "18px", fill: "#ffffff" },
+                        )
+                        .setOrigin(0.5)
+                        .setScrollFactor(0);
+
+                    const nextText = this.add
+                        .text(
+                            GAME_WIDTH / 2,
+                            GAME_HEIGHT / 2 + 40,
+                            "Loading next level...",
+                            { fontSize: "16px", fill: "#ffffff" },
+                        )
+                        .setOrigin(0.5)
+                        .setScrollFactor(0);
+
+                    this.time.delayedCall(2000, () => {
+                        overlay.destroy();
+                        levelText.destroy();
+                        scoreText.destroy();
+                        nextText.destroy();
+                        this.generateLevel();
+                    });
+                }
+
+                gameOver() {
+                    this.physics.pause();
+
+                    if (this.playerTrail.emitting) {
+                        this.playerTrail.stop();
+                    }
+
+                    const gameOverText = this.add
+                        .text(GAME_WIDTH / 2, GAME_HEIGHT / 2, "GAME OVER", {
+                            fontSize: "32px",
+                            fill: "#ff0000",
+                        })
+                        .setOrigin(0.5)
+                        .setScrollFactor(0);
+
+                    const finalScoreText = this.add
+                        .text(
+                            GAME_WIDTH / 2,
+                            GAME_HEIGHT / 2 + 40,
+                            "Final Score: " + this.score,
+                            { fontSize: "24px", fill: "#fff" },
+                        )
+                        .setOrigin(0.5)
+                        .setScrollFactor(0);
+
+                    const restartText = this.add
+                        .text(
+                            GAME_WIDTH / 2,
+                            GAME_HEIGHT / 2 + 80,
+                            "Click to restart",
+                            { fontSize: "18px", fill: "#fff" },
+                        )
+                        .setOrigin(0.5)
+                        .setScrollFactor(0);
+
+                    this.input.once("pointerdown", () => {
+                        this.scene.restart();
+                    });
+                }
+            }
+
+            const config = {
+                type: Phaser.AUTO,
+                width: GAME_WIDTH,
+                height: GAME_HEIGHT,
+                parent: "game-container",
+                physics: {
+                    default: "arcade",
+                    arcade: {
+                        gravity: { y: GRAVITY },
+                        debug: false,
+                    },
+                },
+                scene: QuantumJumper,
+                backgroundColor: "#87CEEB",
+            };
+
+            const game = new Phaser.Game(config);
+        </script>
+    </body>
+</html>
