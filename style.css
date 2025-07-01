@@ -678,6 +678,10 @@ a:focus {
     font-size: 0.7rem;
 }
 
+.early-bird-btn {
+	text-decoration: line-through;
+}
+
 /* ======= Card Styles ======= */
 .retro-card {
     background-color: var(--card-bg);
@@ -1667,6 +1671,19 @@ button:focus,
     margin: 0 auto;
 }
 
+.early-bird-subtitle.missed-sale {
+    color: var(--accent);
+	margin-bottom: 24px;
+	margin-top: 12px;
+}
+
+.missed-sale > a {
+	display: block;
+	width: fit-content;
+	margin: 0 auto;
+	margin-top: 10px;
+}
+
 .early-bird-benefits {
     display: grid;
     grid-template-columns: 1fr;
@@ -1796,7 +1813,7 @@ button:focus,
     margin-bottom: var(--spacing-md);
 }
 
-.countdown-display {
+/* .countdown-display {
     display: flex;
     justify-content: center;
     gap: var(--spacing-md);
@@ -1823,10 +1840,20 @@ button:focus,
     font-size: var(--font-xs);
     color: var(--secondary);
     font-family: var(--heading-font);
-}
+} */
 
 .cta-buttons {
     margin-top: var(--spacing-lg);
+}
+
+a.early-bird {
+	text-decoration: line-through;
+	opacity: 0.5;
+	pointer-events: none;
+	cursor: not-allowed;
+	filter: grayscale(50%);
+	animation: none;
+	box-shadow: none;
 }
 
 .glow-btn {
@@ -1851,11 +1878,11 @@ button:focus,
     }
 }
 
-.cta-note {
+/* .cta-note {
     margin-top: var(--spacing-md);
     font-size: var(--font-sm);
     color: var(--light);
-}
+} */
 
 /* Responsive Design */
 @media (min-width: 768px) {
@@ -1895,14 +1922,14 @@ button:focus,
 }
 
 @media (max-width: 480px) {
-    .countdown-display {
+    /* .countdown-display {
         gap: var(--spacing-sm);
         padding: var(--spacing-sm);
     }
 
     .countdown-number {
         font-size: var(--font-base);
-    }
+    } */
 
     .sticker-display {
         width: 100px;
