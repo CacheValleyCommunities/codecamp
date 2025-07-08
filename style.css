@@ -355,28 +355,26 @@ a:focus {
 
 /* ======= Pixel Art Effects ======= */
 .pixel-corners {
-    clip-path: polygon(
-        0px 6px,
-        3px 6px,
-        3px 3px,
-        6px 3px,
-        6px 0px,
-        calc(100% - 6px) 0px,
-        calc(100% - 6px) 3px,
-        calc(100% - 3px) 3px,
-        calc(100% - 3px) 6px,
-        100% 6px,
-        100% calc(100% - 6px),
-        calc(100% - 3px) calc(100% - 6px),
-        calc(100% - 3px) calc(100% - 3px),
-        calc(100% - 6px) calc(100% - 3px),
-        calc(100% - 6px) 100%,
-        6px 100%,
-        6px calc(100% - 3px),
-        3px calc(100% - 3px),
-        3px calc(100% - 6px),
-        0px calc(100% - 6px)
-    );
+    clip-path: polygon(0px 6px,
+            3px 6px,
+            3px 3px,
+            6px 3px,
+            6px 0px,
+            calc(100% - 6px) 0px,
+            calc(100% - 6px) 3px,
+            calc(100% - 3px) 3px,
+            calc(100% - 3px) 6px,
+            100% 6px,
+            100% calc(100% - 6px),
+            calc(100% - 3px) calc(100% - 6px),
+            calc(100% - 3px) calc(100% - 3px),
+            calc(100% - 6px) calc(100% - 3px),
+            calc(100% - 6px) 100%,
+            6px 100%,
+            6px calc(100% - 3px),
+            3px calc(100% - 3px),
+            3px calc(100% - 6px),
+            0px calc(100% - 6px));
 }
 
 .scanline {
@@ -391,11 +389,9 @@ a:focus {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-        to bottom,
-        transparent 50%,
-        rgba(0, 0, 0, 0.1) 50%
-    );
+    background: linear-gradient(to bottom,
+            transparent 50%,
+            rgba(0, 0, 0, 0.1) 50%);
     background-size: 100% 3px;
     pointer-events: none;
     z-index: 1;
@@ -407,6 +403,7 @@ a:focus {
 }
 
 @keyframes glitch {
+
     0%,
     91%,
     93%,
@@ -446,15 +443,13 @@ a:focus {
     height: 3px;
     width: 150px;
     margin: 0 auto var(--spacing-lg);
-    background-image: linear-gradient(
-        to right,
-        var(--primary) 25%,
-        var(--secondary) 25%,
-        var(--secondary) 50%,
-        var(--accent) 50%,
-        var(--accent) 75%,
-        var(--primary) 75%
-    );
+    background-image: linear-gradient(to right,
+            var(--primary) 25%,
+            var(--secondary) 25%,
+            var(--secondary) 50%,
+            var(--accent) 50%,
+            var(--accent) 75%,
+            var(--primary) 75%);
 }
 
 .dark-section {
@@ -679,7 +674,7 @@ a:focus {
 }
 
 .early-bird-btn {
-	text-decoration: line-through;
+    text-decoration: line-through;
 }
 
 /* ======= Card Styles ======= */
@@ -753,13 +748,11 @@ a:focus {
     bottom: -8px;
     width: 100%;
     height: 3px;
-    background: repeating-linear-gradient(
-        to right,
-        var(--secondary) 0,
-        var(--secondary) 6px,
-        transparent 6px,
-        transparent 12px
-    );
+    background: repeating-linear-gradient(to right,
+            var(--secondary) 0,
+            var(--secondary) 6px,
+            transparent 6px,
+            transparent 12px);
 }
 
 .subtitle {
@@ -921,30 +914,24 @@ a:focus {
 }
 
 .sponsor-banner.gold {
-    background: linear-gradient(
-        90deg,
-        var(--sponsor-gold),
-        rgba(255, 204, 0, 0.5),
-        var(--sponsor-gold)
-    );
+    background: linear-gradient(90deg,
+            var(--sponsor-gold),
+            rgba(255, 204, 0, 0.5),
+            var(--sponsor-gold));
 }
 
 .sponsor-banner.silver {
-    background: linear-gradient(
-        90deg,
-        var(--sponsor-silver),
-        rgba(192, 192, 192, 0.5),
-        var(--sponsor-silver)
-    );
+    background: linear-gradient(90deg,
+            var(--sponsor-silver),
+            rgba(192, 192, 192, 0.5),
+            var(--sponsor-silver));
 }
 
 .sponsor-banner.bronze {
-    background: linear-gradient(
-        90deg,
-        rgba(205, 127, 50, 1),
-        rgba(205, 127, 50, 0.5),
-        rgba(205, 127, 50, 1)
-    );
+    background: linear-gradient(90deg,
+            rgba(205, 127, 50, 1),
+            rgba(205, 127, 50, 0.5),
+            rgba(205, 127, 50, 1));
 }
 
 .sponsor-content {
@@ -1065,9 +1052,12 @@ a:focus {
 .compact-sponsor.gold {
     box-shadow:
         0 0 0 4px var(--sponsor-gold),
-        /* Inner border */ 0 0 0 6px var(--dark),
-        /* Gap */ 0 0 0 8px var(--sponsor-gold),
-        /* Outer border */ 0 0 15px var(--sponsor-gold);
+        /* Inner border */
+        0 0 0 6px var(--dark),
+        /* Gap */
+        0 0 0 8px var(--sponsor-gold),
+        /* Outer border */
+        0 0 15px var(--sponsor-gold);
     /* Glow effect */
 }
 
@@ -1075,9 +1065,12 @@ a:focus {
 .compact-sponsor.silver {
     box-shadow:
         0 0 0 4px var(--sponsor-silver),
-        /* Inner border */ 0 0 0 6px var(--dark),
-        /* Gap */ 0 0 0 8px var(--sponsor-silver),
-        /* Outer border */ 0 0 10px var(--sponsor-silver);
+        /* Inner border */
+        0 0 0 6px var(--dark),
+        /* Gap */
+        0 0 0 8px var(--sponsor-silver),
+        /* Outer border */
+        0 0 10px var(--sponsor-silver);
     /* Glow effect */
 }
 
@@ -1085,9 +1078,12 @@ a:focus {
 .compact-sponsor.bronze {
     box-shadow:
         0 0 0 3px rgba(205, 127, 50, 1),
-        /* Inner border */ 0 0 0 5px var(--dark),
-        /* Gap */ 0 0 0 7px rgba(205, 127, 50, 1),
-        /* Outer border */ 0 0 8px rgba(205, 127, 50, 0.5);
+        /* Inner border */
+        0 0 0 5px var(--dark),
+        /* Gap */
+        0 0 0 7px rgba(205, 127, 50, 1),
+        /* Outer border */
+        0 0 8px rgba(205, 127, 50, 0.5);
     /* Glow effect */
 }
 
@@ -1283,7 +1279,8 @@ a:focus {
     }
 
     .sponsor-content {
-        gap: 1.5rem; /* Reduce gap between logo and content on tablets */
+        gap: 1.5rem;
+        /* Reduce gap between logo and content on tablets */
     }
 
     .sponsor-legendary .sponsor-logo-container {
@@ -1378,7 +1375,8 @@ a:focus {
     .sponsor-legendary,
     .sponsor-heroic,
     .sponsor-allied {
-        padding: 0 0 1rem 0; /* Remove horizontal padding, keep bottom padding */
+        padding: 0 0 1rem 0;
+        /* Remove horizontal padding, keep bottom padding */
     }
 
     .sponsor-content {
@@ -1501,6 +1499,25 @@ a:focus {
 
     .sponsor-legendary .sponsor-cta {
         text-align: right;
+    }
+
+    /* Schedule responsive styles */
+    .schedule-container {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-xl);
+    }
+
+    .event-time {
+        min-width: 90px;
+        font-size: var(--font-base);
+    }
+
+    .event-title {
+        font-size: var(--font-lg);
+    }
+
+    .event-description {
+        font-size: var(--font-base);
     }
 }
 
@@ -1673,15 +1690,15 @@ button:focus,
 
 .early-bird-subtitle.missed-sale {
     color: var(--accent);
-	margin-bottom: 24px;
-	margin-top: 12px;
+    margin-bottom: 24px;
+    margin-top: 12px;
 }
 
-.missed-sale > a {
-	display: block;
-	width: fit-content;
-	margin: 0 auto;
-	margin-top: 10px;
+.missed-sale>a {
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+    margin-top: 10px;
 }
 
 .early-bird-benefits {
@@ -1847,13 +1864,13 @@ button:focus,
 }
 
 a.early-bird {
-	text-decoration: line-through;
-	opacity: 0.5;
-	pointer-events: none;
-	cursor: not-allowed;
-	filter: grayscale(50%);
-	animation: none;
-	box-shadow: none;
+    text-decoration: line-through;
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+    filter: grayscale(50%);
+    animation: none;
+    box-shadow: none;
 }
 
 .glow-btn {
@@ -1865,12 +1882,14 @@ a.early-bird {
 }
 
 @keyframes pulse-glow {
+
     0%,
     100% {
         box-shadow:
             6px 6px 0 rgba(0, 0, 0, 0.8),
             0 0 20px rgba(255, 204, 0, 0.4);
     }
+
     50% {
         box-shadow:
             6px 6px 0 rgba(0, 0, 0, 0.8),
@@ -1884,65 +1903,106 @@ a.early-bird {
     color: var(--light);
 } */
 
-/* Responsive Design */
-@media (min-width: 768px) {
-    .benefit-content {
-        flex-direction: row;
-        text-align: left;
-        align-items: flex-start;
-    }
-
-    .benefit-icon {
-        margin-right: var(--spacing-lg);
-    }
-
-    .early-bird-benefits {
-        gap: var(--spacing-xl);
-    }
-
-    .sticker-display {
-        width: 150px;
-        height: auto;
-    }
-
-    .sticker-placeholder span {
-        font-size: 2.5rem;
-    }
-
-    .sticker-text {
-        font-size: 0.7rem;
-    }
+/* ======= Schedule Styles ======= */
+.schedule-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-xl);
 }
 
-@media (min-width: 1024px) {
-    .early-bird-benefits {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-xl);
-    }
+.schedule-day {
+    background: linear-gradient(135deg, var(--card-bg) 0%, rgba(18, 18, 61, 0.8) 100%);
+    border: 3px solid var(--secondary);
+    position: relative;
 }
 
-@media (max-width: 480px) {
-    /* .countdown-display {
-        gap: var(--spacing-sm);
-        padding: var(--spacing-sm);
-    }
-
-    .countdown-number {
-        font-size: var(--font-base);
-    } */
-
-    .sticker-display {
-        width: 100px;
-        height: auto;
-    }
-
-    .access-icon,
-    .discord-icon {
-        font-size: 3rem;
-    }
-}
-
-.w-full {
+.schedule-day::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: auto;
+    height: 5px;
+    background: linear-gradient(90deg, var(--secondary), var(--primary), var(--accent));
 }
+
+.day-header {
+    text-align: center;
+    padding: var(--spacing-lg) var(--spacing-md);
+    border-bottom: 2px solid var(--secondary);
+    background: rgba(0, 255, 204, 0.1);
+}
+
+.day-title {
+    font-size: var(--font-xl);
+    color: var(--secondary);
+    margin-bottom: var(--spacing-sm);
+    text-shadow: 2px 2px 0 var(--text-shadow);
+}
+
+.day-subtitle {
+    color: var(--light);
+    font-family: var(--body-font);
+    font-size: var(--font-sm);
+    opacity: 0.9;
+}
+
+.schedule-events {
+    padding: var(--spacing-lg);
+}
+
+.schedule-event {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    border-left: 3px solid var(--secondary);
+    background: rgba(0, 255, 204, 0.05);
+    transition: all var(--transition-fast);
+}
+
+.schedule-event:hover {
+    background: rgba(0, 255, 204, 0.1);
+    transform: translateX(5px);
+}
+
+.schedule-event.highlight {
+    border-left-color: var(--primary);
+    background: rgba(255, 0, 102, 0.1);
+}
+
+.schedule-event.highlight:hover {
+    background: rgba(255, 0, 102, 0.15);
+}
+
+.event-time {
+    min-width: 80px;
+    font-size: var(--font-sm);
+    color: var(--accent);
+    font-weight: bold;
+    text-shadow: 1px 1px 0 var(--text-shadow);
+}
+
+.event-details {
+    flex: 1;
+}
+
+.event-title {
+    font-family: var(--heading-font);
+    font-size: var(--font-base);
+    color: var(--light);
+    margin-bottom: var(--spacing-xs);
+    text-shadow: 1px 1px 0 var(--text-shadow);
+}
+
+.event-description {
+    font-family: var(--body-font);
+    font-size: var(--font-sm);
+    color: var(--light);
+    opacity: 0.8;
+    line-height: 1.4;
+}
+
+/* ======= Section Titles ======= */
