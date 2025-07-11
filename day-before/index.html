@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>CodeCamp: Bridgerland - Event Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #242424;
+            background-color: #ffffff;
+            font-size: 18px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .email-container {
+            max-width: 680px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+
+        .header {
+            padding: 60px 40px 40px;
+            text-align: center;
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #242424;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #6b6b6b;
+            font-weight: 400;
+            margin-bottom: 24px;
+        }
+
+        .event-date {
+            display: inline-block;
+            background-color: #f8f8f8;
+            color: #242424;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 500;
+            border: 1px solid #e6e6e6;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .content h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #242424;
+            margin-bottom: 24px;
+            letter-spacing: -0.8px;
+            line-height: 1.2;
+        }
+
+        .content h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #242424;
+            margin: 40px 0 20px 0;
+            letter-spacing: -0.4px;
+        }
+
+        .content h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #242424;
+            margin: 32px 0 16px 0;
+            letter-spacing: -0.2px;
+        }
+
+        .content p {
+            margin-bottom: 20px;
+            line-height: 1.7;
+            color: #242424;
+        }
+
+        .intro-text {
+            font-size: 20px;
+            line-height: 1.6;
+            color: #6b6b6b;
+            margin-bottom: 32px;
+        }
+
+        .info-card {
+            background-color: #f8f8f8;
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+            border: 1px solid #e6e6e6;
+        }
+
+        .info-card h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .location-info {
+            text-align: center;
+        }
+
+        .address {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .important-note {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            font-size: 16px;
+            color: #856404;
+        }
+
+        .map-link {
+            display: inline-block;
+            background-color: #242424;
+            color: #ffffff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            margin-top: 16px;
+            transition: background-color 0.2s ease;
+        }
+
+        .map-link:hover {
+            background-color: #404040;
+        }
+
+        .timeline {
+            margin: 32px 0;
+        }
+
+        .day-section {
+            margin-bottom: 40px;
+        }
+
+        .day-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #242424;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e6e6e6;
+        }
+
+        .schedule-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .schedule-item:last-child {
+            border-bottom: none;
+        }
+
+        .schedule-time {
+            min-width: 80px;
+            font-weight: 600;
+            color: #6b6b6b;
+            font-size: 16px;
+            margin-right: 24px;
+            flex-shrink: 0;
+        }
+
+        .schedule-details {
+            flex: 1;
+        }
+
+        .schedule-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 17px;
+        }
+
+        .schedule-desc {
+            color: #6b6b6b;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .checklist {
+            background-color: #f8f8f8;
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+        }
+
+        .checklist h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .checklist ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 24px;
+            line-height: 1.6;
+        }
+
+        .checklist li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #242424;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .important-list {
+            margin: 20px 0;
+        }
+
+        .important-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .important-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            line-height: 1.6;
+        }
+
+        .important-list li:last-child {
+            border-bottom: none;
+        }
+
+        .important-list .label {
+            font-weight: 600;
+            color: #242424;
+        }
+
+        .cta-section {
+            text-align: center;
+            margin: 48px 0;
+            padding: 32px;
+            background-color: #f8f8f8;
+            border-radius: 12px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #242424;
+            color: #ffffff;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            margin: 8px 12px;
+            transition: background-color 0.2s ease;
+            font-size: 16px;
+        }
+
+        .cta-button:hover {
+            background-color: #404040;
+        }
+
+        .cta-button.secondary {
+            background-color: transparent;
+            color: #242424;
+            border: 2px solid #242424;
+        }
+
+        .cta-button.secondary:hover {
+            background-color: #242424;
+            color: #ffffff;
+        }
+
+        .highlight-box {
+            background-color: #fff;
+            border: 2px solid #242424;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 32px 0;
+            text-align: center;
+        }
+
+        .highlight-box h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        .footer {
+            background-color: #f8f8f8;
+            padding: 40px;
+            text-align: center;
+            border-top: 1px solid #e6e6e6;
+        }
+
+        .footer-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #242424;
+        }
+
+        .footer-text {
+            color: #6b6b6b;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .footer-links {
+            margin-top: 24px;
+            font-size: 14px;
+        }
+
+        .footer-links a {
+            color: #6b6b6b;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+
+        .footer-links a:hover {
+            color: #242424;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #e6e6e6;
+            margin: 40px 0;
+            border: none;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+            }
+
+            .header,
+            .content,
+            .footer {
+                padding: 24px !important;
+            }
+
+            .content h1 {
+                font-size: 28px !important;
+            }
+
+            .content h2 {
+                font-size: 22px !important;
+            }
+
+            .schedule-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .schedule-time {
+                margin-bottom: 8px;
+                margin-right: 0;
+            }
+
+            .info-card,
+            .checklist,
+            .cta-section {
+                padding: 24px !important;
+            }
+
+            .cta-button {
+                display: block;
+                margin: 12px 0;
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">CodeCamp: Bridgerland</div>
+            <div class="subtitle">Your coding adventure awaits</div>
+            <div class="event-date">July 11-12, 2025</div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <h1>Your quest begins tomorrow!</h1>
+
+            <p class="intro-text">We're excited to have you join us for this legendary coding adventure. Here's
+                everything you need to know to prepare for the event.</p>
+
+            <hr class="divider">
+
+            <!-- Location -->
+            <div class="info-card location-info">
+                <h3>📍 Event Location</h3>
+                <div class="address">
+                    <strong>Bridgerland Technical College</strong><br>
+                    West Building<br>
+                    1410 N 1000 W<br>
+                    Logan, UT 84321
+                </div>
+                <div class="important-note">
+                    <strong>Important:</strong> Enter through the south-east doors. We will have volunteers
+                    directing you to the event location for your convenience.
+                </div>
+                <a href="https://www.google.com/maps?q=41.75860431533935,-111.85644008141665" class="map-link">Get
+                    Directions</a>
+            </div>
+
+            <!-- Important Information -->
+            <div class="info-card">
+                <h3>📋 What You Need to Know</h3>
+                <div class="important-list">
+                    <ul>
+                        <li><span class="label">Laptop:</span> Please bring your own if possible. We have limited spare
+                            laptops available.</li>
+                        <li><span class="label">Food & Drinks:</span> Snacks and beverages provided throughout the
+                            event. Meals are not included. Plan for lunch and dinner breaks.</li>
+                        <li><span class="label">Internet:</span> WiFi will be available at the venue.</li>
+                        <li><span class="label">Skill Level:</span> All levels welcome. Mentors will be available to
+                            help.</li>
+                        <li><span class="label">Parking:</span> Free parking available on campus.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Schedule -->
+            <h2>📅 Event Schedule</h2>
+
+            <div class="timeline">
+                <div class="day-section">
+                    <div class="day-title">Friday, July 11th</div>
+
+                    <div class="schedule-item">
+                        <div class="schedule-time">7:30 AM</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Early Bird Check-in</div>
+                            <div class="schedule-desc">Early bird ticket holders can enter</div>
+                        </div>
+                    </div>
+
+                    <div class="schedule-item">
+                        <div class="schedule-time">7:45 AM</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">General Check-in</div>
+                            <div class="schedule-desc">All participants can enter and get settled</div>
+                        </div>
+                    </div>
+
+                    <div class="schedule-item">
+                        <div class="schedule-time">8:00 AM</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Kickoff & Project Start</div>
+                            <div class="schedule-desc">Opening remarks and begin coding</div>
+                        </div>
+                    </div>
+
+                    <div class="schedule-item">
+                        <div class="schedule-time">11:00 AM</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Special Interview</div>
+                            <div class="schedule-desc">WebDevCody shares insights and wisdom</div>
+                        </div>
+                    </div>
+
+                    <div class="schedule-item">
+                        <div class="schedule-time">12:00 PM</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Lunch Break</div>
+                            <div class="schedule-desc">Take a break for lunch (not provided)</div>
+                        </div>
+                    </div>
+
+                    <div class="schedule-item">
+                        <div class="schedule-time">5:00 PM</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Dinner Break</div>
+                            <div class="schedule-desc">Evening meal break (not provided)</div>
+                        </div>
+                    </div>
+
+                    <div class="schedule-item">
+                        <div class="schedule-time">8:00 PM</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Day 1 Wrap</div>
+                            <div class="schedule-desc">End of Day 1, continue working at home if desired</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="day-section">
+                    <div class="day-title">Saturday, July 12th</div>
+
+                    <div class="schedule-item">
+                        <div class="schedule-time">7:30 AM</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Venue Reopens</div>
+                            <div class="schedule-desc">Return to continue your projects</div>
+                        </div>
+                    </div>
+
+                    <div class="schedule-item">
+                        <div class="schedule-time">12:00 PM</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Lunch Break</div>
+                            <div class="schedule-desc">Midday break for lunch</div>
+                        </div>
+                    </div>
+
+                    <div class="schedule-item">
+                        <div class="schedule-time">2:00 PM</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Networking & Alliance Fair</div>
+                            <div class="schedule-desc">Connect with fellow participants</div>
+                        </div>
+                    </div>
+
+                    <div class="schedule-item">
+                        <div class="schedule-time">5:00 PM</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Dinner Break</div>
+                            <div class="schedule-desc">Final meal break before presentations</div>
+                        </div>
+                    </div>
+
+                    <div class="schedule-item">
+                        <div class="schedule-time">7:00 PM</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Project Presentations & Judging</div>
+                            <div class="schedule-desc">Showcase your creations and compete for prizes</div>
+                        </div>
+                    </div>
+
+                    <div class="schedule-item">
+                        <div class="schedule-time">8:00 PM</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Closing & Awards</div>
+                            <div class="schedule-desc">Event conclusion and prize ceremony</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- What to Bring -->
+            <div class="checklist">
+                <h3>🎒 What to Bring</h3>
+                <ul>
+                    <li>Your laptop and charger (strongly recommended)</li>
+                    <li>Development tools and software you prefer</li>
+                    <li>Project ideas (games, apps, AI tools, maker projects)</li>
+                    <li>Comfortable clothes for long coding sessions</li>
+                    <li>Water bottle (snacks and drinks provided)</li>
+                    <li>Resume or business cards for networking</li>
+                    <li>Positive attitude and willingness to learn</li>
+                </ul>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="cta-section">
+                <h3>Ready to join the adventure?</h3>
+                <p>Get your ticket and connect with other participants before the event.</p>
+                <a href="https://www.eventbrite.com/e/codecamp-bridgerland-july-11-12-tickets-1349776209979"
+                    class="cta-button">Get Tickets ($10)</a>
+                <a href="https://discord.gg/YNkqmVGZbS" class="cta-button secondary">Join Discord</a>
+            </div>
+
+            <hr class="divider">
+
+            <div class="highlight-box">
+                <h3>Questions?</h3>
+                <p>If you have any questions about the event, directions, or what to expect, feel free to reach out on
+                    Discord or reply to this email. We're here to help make your experience amazing!</p>
+                <p>Or, Contact our support team at <a href="mailto:codecamp@cachevalley.co">codecamp@cachevalley.co</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-title">CodeCamp: Bridgerland</div>
+            <div class="footer-text">Bridgerland Technical College, Logan, UT</div>
+
+            <div class="footer-text" style="margin-top: 24px; font-size: 14px;">
+                © 2025 CodeCamp: Bridgerland. All rights reserved.
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
