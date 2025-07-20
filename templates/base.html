@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{block "title" .}}CodeCamp: Bridgerland{{end}}</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        /* Medium-inspired design system */
+
+        /* Base typography - Medium's signature serif for headings */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Source Serif 4', serif !important;
+            font-weight: 400 !important;
+            color: #1a1a1a !important;
+            line-height: 1.25 !important;
+        }
+
+        /* Body text - clean sans-serif like Medium */
+        body,
+        p,
+        .lead,
+        .btn,
+        .nav-link,
+        .navbar-brand {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+            color: #ffffffde !important;
+        }
+
+        .lead__dark {
+            color: #333 !important;
+        }
+
+        /* Medium's signature large headings */
+        .display-2 {
+            font-size: 3.5rem !important;
+            font-weight: 400 !important;
+            line-height: 1.15 !important;
+            margin-bottom: 1.5rem !important;
+        }
+
+        .display-4 {
+            font-size: 2.2rem !important;
+            font-weight: 400 !important;
+            line-height: 1.2 !important;
+        }
+
+        .display-5 {
+            font-size: 1.75rem !important;
+            font-weight: 400 !important;
+            line-height: 1.2 !important;
+        }
+
+        /* Body text improvements */
+        p {
+            font-size: 1.1rem !important;
+            line-height: 1.7 !important;
+            color: #333 !important;
+            margin-bottom: 1.5rem !important;
+        }
+
+        .lead {
+            font-size: 1.3rem !important;
+            line-height: 1.6 !important;
+            color: #ffffffde !important;
+            font-weight: 400 !important;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Medium-style buttons */
+        .btn {
+            border-radius: 30px !important;
+            padding: 12px 24px !important;
+            font-weight: 500 !important;
+            text-transform: none !important;
+            border: 2px solid transparent !important;
+            transition: all 0.2s ease !important;
+            font-size: 0.95rem !important;
+        }
+
+        .btn-outline-dark {
+            border-color: #1a1a1a !important;
+            color: #1a1a1a !important;
+            background: transparent !important;
+        }
+
+        .btn-outline-dark:hover {
+            background-color: #1a1a1a !important;
+            border-color: #1a1a1a !important;
+            color: white !important;
+            transform: translateY(-1px) !important;
+        }
+
+        .btn-outline-light {
+            border-color: rgba(255, 255, 255, 0.8) !important;
+            color: rgba(255, 255, 255, 0.9) !important;
+            background: transparent !important;
+        }
+
+        .btn-outline-light:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border-color: white !important;
+            color: white !important;
+        }
+
+        .btn-light {
+            background-color: white !important;
+            color: #1a1a1a !important;
+            border-color: white !important;
+        }
+
+        .btn-light:hover {
+            background-color: #f8f9fa !important;
+            transform: translateY(-1px) !important;
+        }
+
+        /* Medium's signature green accent */
+        .btn-primary {
+            background: linear-gradient(135deg, #03a87c, #059669) !important;
+            border: none !important;
+            color: white !important;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #059669, #047857) !important;
+            transform: translateY(-1px) !important;
+        }
+
+        .btn-outline-primary {
+            border-color: #03a87c !important;
+            color: #03a87c !important;
+            background: transparent !important;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #03a87c !important;
+            border-color: #03a87c !important;
+            color: white !important;
+            transform: translateY(-1px) !important;
+        }
+
+        /* Medium-style sections and spacing */
+        section {
+            position: relative;
+            padding: 120px 0 !important;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            padding: 140px 0 !important;
+        }
+
+        /* Enhanced content sections */
+        .content-section {
+            padding: 120px 0 !important;
+        }
+
+        .content-section-lg {
+            padding: 140px 0 !important;
+        }
+
+        .content-section-xl {
+            padding: 160px 0 !important;
+        }
+
+        .content-section:first-child {
+            padding-top: 80px !important;
+        }
+
+        .content-section:last-child {
+            padding-bottom: 80px !important;
+        }
+
+        /* Enhanced spacing utilities */
+        .mb-6 {
+            margin-bottom: 4rem !important;
+        }
+
+        .mb-7 {
+            margin-bottom: 5rem !important;
+        }
+
+        .mb-8 {
+            margin-bottom: 6rem !important;
+        }
+
+        .mb-9 {
+            margin-bottom: 7rem !important;
+        }
+
+        .mt-6 {
+            margin-top: 4rem !important;
+        }
+
+        .mt-7 {
+            margin-top: 5rem !important;
+        }
+
+        .mt-8 {
+            margin-top: 6rem !important;
+        }
+
+        .mt-9 {
+            margin-top: 7rem !important;
+        }
+
+        .p-6 {
+            padding: 3rem !important;
+        }
+
+        .p-7 {
+            padding: 4rem !important;
+        }
+
+        .p-8 {
+            padding: 5rem !important;
+        }
+
+        .px-6 {
+            padding-left: 3rem !important;
+            padding-right: 3rem !important;
+        }
+
+        .px-7 {
+            padding-left: 4rem !important;
+            padding-right: 4rem !important;
+        }
+
+        .py-6 {
+            padding-top: 3rem !important;
+            padding-bottom: 3rem !important;
+        }
+
+        .py-7 {
+            padding-top: 4rem !important;
+            padding-bottom: 4rem !important;
+        }
+
+        .py-8 {
+            padding-top: 5rem !important;
+            padding-bottom: 5rem !important;
+        }
+
+        .py-9 {
+            padding-top: 6rem !important;
+            padding-bottom: 6rem !important;
+        }
+
+        /* Gap utilities for flex/grid layouts */
+        .gap-6 {
+            gap: 3rem !important;
+        }
+
+        .gap-7 {
+            gap: 4rem !important;
+        }
+
+        .gap-8 {
+            gap: 5rem !important;
+        }
+
+        /* Modern card styling */
+        .card-modern {
+            border: none !important;
+            border-radius: 16px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+            transition: all 0.3s ease !important;
+            overflow: hidden;
+        }
+
+        .card-modern:hover {
+            transform: translateY(-6px) !important;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        /* Enhanced rounded corners */
+        .rounded-4 {
+            border-radius: 1rem !important;
+        }
+
+        .rounded-5 {
+            border-radius: 1.25rem !important;
+        }
+
+        .rounded-6 {
+            border-radius: 1.5rem !important;
+        }
+
+        /* Modern background colors */
+        .bg-light-modern {
+            background-color: #fafbfc !important;
+        }
+
+        .bg-gray-50 {
+            background-color: #f9fafb !important;
+        }
+
+        .bg-gray-100 {
+            background-color: #f3f4f6 !important;
+        }
+
+        /* Improved text contrast for accessibility */
+        .text-muted-dark {
+            color: #495057 !important;
+            /* Darker than Bootstrap's default #6c757d */
+        }
+
+        .text-contrast {
+            color: #333 !important;
+            /* High contrast dark text */
+        }
+
+        /* Ensure proper contrast on light backgrounds */
+        .bg-gray-50 .text-muted,
+        .bg-light .text-muted {
+            color: #495057 !important;
+            /* Darker for better contrast */
+        }
+
+        .bg-gray-50 small.text-muted,
+        .bg-light small.text-muted {
+            color: #495057 !important;
+        }
+
+        /* Enhanced shadows */
+        .shadow-soft {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06) !important;
+        }
+
+        .shadow-modern {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Medium's clean background */
+        body {
+            background-color: #ffffff !important;
+            color: #333 !important;
+        }
+
+        /* Statistics cards - Medium style */
+        .stats-card {
+            background: #f9f9f9 !important;
+            border: 1px solid #eee !important;
+            border-radius: 12px !important;
+            padding: 2.5rem 1.5rem !important;
+            transition: all 0.3s ease !important;
+            text-align: center;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-4px) !important;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1) !important;
+            border-color: #ddd !important;
+        }
+
+        .stats-card h4 {
+            font-size: 3rem !important;
+            color: #03a87c !important;
+            font-weight: 600 !important;
+            margin-bottom: 0.5rem !important;
+        }
+
+        .stats-card p {
+            color: #666 !important;
+            font-size: 0.9rem !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            font-weight: 500 !important;
+            margin: 0 !important;
+        }
+
+        /* Medium's article-like containers */
+        .container {
+            max-width: 1100px !important;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        /* Alert styling */
+        .alert {
+            border-radius: 8px !important;
+            border: none !important;
+            padding: 1rem 1.5rem !important;
+        }
+
+        .alert-info {
+            background-color: #e3f2fd !important;
+            color: #1976d2 !important;
+        }
+
+        .alert-success {
+            background-color: #e8f5e8 !important;
+            color: #2e7d32 !important;
+        }
+
+        /* Form styling */
+        .form-control {
+            border-radius: 8px !important;
+            border: 1px solid #ddd !important;
+            padding: 0.75rem 1rem !important;
+            font-size: 1rem !important;
+        }
+
+        .form-control:focus {
+            border-color: #03a87c !important;
+            box-shadow: 0 0 0 0.2rem rgba(3, 168, 124, 0.25) !important;
+        }
+
+        /* Badge styling */
+        .badge {
+            font-weight: 500 !important;
+            font-size: 0.85rem !important;
+        }
+
+        .rounded-pill {
+            border-radius: 50px !important;
+        }
+    </style>
+
+    {{block "styles" .}}{{end}}
+</head>
+
+<body>
+    <!-- Navigation - Medium style -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top"
+        style="border-color: #e5e5e5 !important;">
+        <div class="container">
+            <a href="/" class="navbar-brand"
+                style="font-family: 'Source Serif 4', serif; font-size: 1.8rem; color: #1a1a1a !important; font-weight: 500;">CodeCamp</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        {{if eq .CurrentPage "home"}}
+                        <a href="/" class="nav-link active"
+                            style="color: #03a87c !important; font-weight: 500;">Home</a>
+                        {{else}}
+                        <a href="/" class="nav-link" style="color: #666 !important;">Home</a>
+                        {{end}}
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="aboutDropdown" role="button"
+                            data-bs-toggle="dropdown" style="color: #666 !important;">About</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/about">About Us</a></li>
+                            <li><a class="dropdown-item" href="/past-winners">Past Winners</a></li>
+                            <li><a class="dropdown-item" href="/volunteers">Volunteers</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        {{if eq .CurrentPage "sponsors"}}
+                        <a href="/sponsors" class="nav-link active"
+                            style="color: #03a87c !important; font-weight: 500;">Sponsors</a>
+                        {{else}}
+                        <a href="/sponsors" class="nav-link" style="color: #666 !important;">Sponsors</a>
+                        {{end}}
+                    </li>
+                    <li class="nav-item">
+                        {{if eq .CurrentPage "rules"}}
+                        <a href="/rules" class="nav-link active"
+                            style="color: #03a87c !important; font-weight: 500;">Rules</a>
+                        {{else}}
+                        <a href="/rules" class="nav-link" style="color: #666 !important;">Rules</a>
+                        {{end}}
+                    </li>
+                    <li class="nav-item">
+                        {{if eq .CurrentPage "archive"}}
+                        <a href="/summer-2025/" class="nav-link active"
+                            style="color: #03a87c !important; font-weight: 500;">2025 Archive</a>
+                        {{else}}
+                        <a href="/summer-2025/" class="nav-link" style="color: #666 !important;">2025 Archive</a>
+                        {{end}}
+                    </li>
+                    <li class="nav-item">
+                        <a href="https://cachevalley.co" target="_blank" class="nav-link"
+                            style="color: #666 !important;">Community</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    {{block "content" .}}{{end}}
+
+    <!-- Footer - Medium style -->
+    <footer style="background-color: #f8f9fa; border-top: 1px solid #eee; padding: 4rem 0 2rem;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <h5 class="mb-3" style="font-family: 'Source Serif 4', serif; color: #1a1a1a;">CodeCamp: Bridgerland
+                    </h5>
+                    <p style="color: #666; line-height: 1.6;">Building the future, one line at a time. Join our
+                        community of developers, learners, and innovators in Cache Valley.</p>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <h5 class="mb-3" style="color: #1a1a1a;">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="/" class="text-decoration-none" style="color: #666;">Home</a></li>
+                        <li class="mb-2"><a href="/game-download" class="text-decoration-none" style="color: #666;">Game
+                                Assets</a></li>
+                        <li class="mb-2"><a href="/summer-2025/" class="text-decoration-none" style="color: #666;">2025
+                                Archive</a></li>
+                        <li class="mb-2"><a href="/day-before/" class="text-decoration-none"
+                                style="color: #666;">Pre-Event Materials</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <h5 class="mb-3" style="color: #1a1a1a;">Community</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="https://cachevalley.co" target="_blank" class="text-decoration-none"
+                                style="color: #666;">Cache Tech Community</a></li>
+                        <li class="mb-2"><a href="#" target="_blank" class="text-decoration-none"
+                                style="color: #666;">Discord Server</a></li>
+                        <li class="mb-2"><a href="#" target="_blank" class="text-decoration-none"
+                                style="color: #666;">Monthly Meetups</a></li>
+                        <li class="mb-2"><a href="#" target="_blank" class="text-decoration-none"
+                                style="color: #666;">STEM Outreach</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <h5 class="mb-3" style="color: #1a1a1a;">Events</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-decoration-none" style="color: #666;">CodeCamp 2026</a>
+                        </li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none" style="color: #666;">Workshops</a>
+                        </li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none" style="color: #666;">Hackathons</a>
+                        </li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none" style="color: #666;">Newsletter</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr style="color: #eee; margin: 2rem 0;">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="d-flex gap-4">
+                        <a href="#" target="_blank" title="Discord" class="text-decoration-none"
+                            style="color: #666; font-size: 1.2rem;">💬</a>
+                        <a href="#" target="_blank" title="GitHub" class="text-decoration-none"
+                            style="color: #666; font-size: 1.2rem;">🐙</a>
+                        <a href="#" target="_blank" title="Twitter" class="text-decoration-none"
+                            style="color: #666; font-size: 1.2rem;">🐦</a>
+                        <a href="#" target="_blank" title="LinkedIn" class="text-decoration-none"
+                            style="color: #666; font-size: 1.2rem;">💼</a>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0" style="color: #999; font-size: 0.9rem;">&copy; {{.Year}} CodeCamp: Bridgerland. Made
+                        with ❤️ for the developer community.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Navigation Script --> <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    {{block "scripts" .}}{{end}}
+</body>
+
+</html>

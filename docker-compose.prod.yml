@@ -1,0 +1,50 @@
+version: "3.8"
+
+# Production override - assumes SSL termination and reverse proxy handled externally
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  codecamp-web:
+    # Only expose to internal network, not to host
+    ports: []
+    expose:
+      - "8082"
+    environment:
+      - ENV=production
+      - TZ=America/Denver
+    # Remove development volume mounts
+    volumes:
+      - codecamp-logs:/app/logs
+    # Production resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 1G
+        reservations:
+          cpus: "0.5"
+          memory: 256M
+      # Restart policy
+      restart_policy:
+        condition: unless-stopped
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    # Additional production security
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/logs
+    # Labels for reverse proxy (example for Traefik)
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.codecamp.rule=Host(`codecamp.yourdomain.com`)"
+      - "traefik.http.routers.codecamp.entrypoints=websecure"
+      - "traefik.http.routers.codecamp.tls.certresolver=letsencrypt"
+      - "traefik.http.services.codecamp.loadbalancer.server.port=8082"
+
+networks:
+  default:
+    # Use external network for reverse proxy communication
+    external:
+      name: proxy_network

@@ -1,0 +1,32 @@
+{{define "newsletter"}}
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center text-center mb-5">
+            <div class="col-lg-8">
+                <h2 class="display-4 text-white mb-4">Stay Connected</h2>
+                <p class="lead text-white" style="opacity: 0.9;">Get updates about events, workshops, and opportunities
+                    in the Cache Valley tech scene</p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <form id="newsletter-form" class="d-flex flex-column gap-3">
+                    <div class="form-floating">
+                        <input type="email" id="email" name="email" class="form-control"
+                            placeholder="Enter your email address" required
+                            style="border-radius: 8px; border: none; font-size: 1rem; padding: 1rem;">
+                        <label for="email">Email address</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Your name (optional)"
+                            style="border-radius: 8px; border: none; font-size: 1rem; padding: 1rem;">
+                        <label for="name">Your name (optional)</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg mt-2">Subscribe</button>
+                </form>
+                <div id="newsletter-message" class="alert mt-3" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+</section>
+{{end}}

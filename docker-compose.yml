@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  codecamp-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: codecamp-web
+    restart: unless-stopped
+    ports:
+      - "8082:8082"
+    environment:
+      # Set environment variables if needed
+      - ENV=production
+      - TZ=America/Denver # Cache Valley timezone
+    volumes:
+      # Optional: Mount templates for development (comment out for production)
+      # - ./templates:/app/templates:ro
+      # - ./archive:/app/archive:ro
+      # - ./public:/app/public:ro
+
+      # Logs volume (optional)
+      - codecamp-logs:/app/logs
+    networks:
+      - codecamp-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:8082/",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+
+networks:
+  codecamp-network:
+    driver: bridge
+
+volumes:
+  codecamp-logs:
+    driver: local

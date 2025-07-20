@@ -1,0 +1,388 @@
+/* ===== PAGE-SPECIFIC COMPONENTS ===== */
+
+/* ===== ABOUT SECTION COMPONENT ===== */
+.about-section {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.about-section__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.about-section__text {
+    color: #64748b;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+.about-section__image {
+    text-align: center;
+}
+
+.about-section__image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== EVENT CARD COMPONENT ===== */
+.event-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+}
+
+.event-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.event-card__header {
+    padding: 30px;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: white;
+    text-align: center;
+}
+
+.event-card__date {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.event-card__month {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+.event-card__content {
+    padding: 30px;
+}
+
+.event-card__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 15px;
+}
+
+.event-card__description {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.event-card__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.event-card__time {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.event-card__status {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.event-card__status--upcoming {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.event-card__status--completed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+/* ===== SPONSOR CARD COMPONENT ===== */
+.sponsor-card {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.sponsor-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+}
+
+.sponsor-card__logo {
+    width: 100%;
+    max-width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.sponsor-card:hover .sponsor-card__logo {
+    transform: scale(1.05);
+}
+
+.sponsor-card__name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+.sponsor-card__description {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+/* ===== FEATURE ITEM COMPONENT ===== */
+.feature-item {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.feature-item__icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    font-size: 2rem;
+    color: white;
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+}
+
+.feature-item__title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 15px;
+}
+
+.feature-item__description {
+    color: #64748b;
+    line-height: 1.6;
+}
+
+/* ===== NEWSLETTER FORM COMPONENT ===== */
+.newsletter-form {
+    background: white;
+    padding: 50px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.newsletter-form__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 15px;
+}
+
+.newsletter-form__description {
+    color: #64748b;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.newsletter-form__input-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.newsletter-form__input {
+    flex: 1;
+    padding: 14px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.newsletter-form__input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.newsletter-form__disclaimer {
+    font-size: 0.9rem;
+    color: #9ca3af;
+    margin-top: 15px;
+}
+
+/* ===== GAME DOWNLOAD COMPONENTS ===== */
+.game-download {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.game-download:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.game-download__header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.game-download__title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.game-download__subtitle {
+    opacity: 0.9;
+    font-size: 1.1rem;
+}
+
+.game-download__content {
+    padding: 30px;
+}
+
+.game-download__description {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.download-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    transition: all 0.2s ease;
+}
+
+.download-item:hover {
+    border-color: #2563eb;
+    background: #f8fafc;
+}
+
+.download-item__info {
+    flex: 1;
+}
+
+.download-item__name {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 5px;
+}
+
+.download-item__description {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.download-item__meta {
+    text-align: right;
+    margin-right: 20px;
+}
+
+.download-item__size {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.download-item__button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.download-item__button:hover {
+    background: #1d4ed8;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+    .about-section__content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .event-card__header {
+        padding: 20px;
+    }
+
+    .event-card__date {
+        font-size: 2.5rem;
+    }
+
+    .event-card__content {
+        padding: 20px;
+    }
+
+    .event-card__meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .sponsor-card {
+        padding: 30px 20px;
+    }
+
+    .newsletter-form {
+        padding: 40px 30px;
+    }
+
+    .newsletter-form__input-group {
+        flex-direction: column;
+    }
+
+    .download-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .download-item__meta {
+        text-align: center;
+        margin-right: 0;
+    }
+}
