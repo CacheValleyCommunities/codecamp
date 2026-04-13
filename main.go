@@ -3,13 +3,20 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"html/template"
 	"log"
+	"net"
+	"net/mail"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
+	"sync"
+	"time"
+
+	"github.com/joho/godotenv"
 )
 
 type PageData struct {
@@ -27,7 +34,24 @@ var funcMap = template.FuncMap{
 	},
 }
 
+const (
+	newsletterRateLimitWindow      = time.Minute
+	newsletterRateLimitMaxRequests = 5
+	newsletterNameMaxLength        = 120
+)
+
+var newsletterLimiter = struct {
+	mu       sync.Mutex
+	requests map[string][]time.Time
+}{
+	requests: make(map[string][]time.Time),
+}
+
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file loaded; using existing environment variables")
+	}
+
 	// Serve static files from summer-2025 folder
 	fs := http.FileServer(http.Dir("./archive/summer-2025/"))
 	http.Handle("/summer-2025/", http.StripPrefix("/summer-2025/", fs))
@@ -172,15 +196,36 @@ func volunteersHandler(w http.ResponseWriter, r *http.Request) {
 
 func newsletterSignupHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		writeJSONError(w, http.StatusMethodNotAllowed, "Method not allowed")
 		return
 	}
 
-	email := r.FormValue("email")
-	name := r.FormValue("name")
+	if strings.TrimSpace(r.FormValue("website")) != "" {
+		writeJSONError(w, http.StatusBadRequest, "Invalid submission")
+		return
+	}
+
+	if !allowNewsletterRequest(clientIP(r)) {
+		writeJSONError(w, http.StatusTooManyRequests, "Too many signup attempts. Please try again shortly.")
+		return
+	}
+
+	email := strings.TrimSpace(r.FormValue("email"))
+	name := strings.TrimSpace(r.FormValue("name"))
 
 	if email == "" {
-		http.Error(w, "Email is required", http.StatusBadRequest)
+		writeJSONError(w, http.StatusBadRequest, "Email is required")
+		return
+	}
+
+	parsedEmail, err := mail.ParseAddress(email)
+	if err != nil || parsedEmail.Address != email {
+		writeJSONError(w, http.StatusBadRequest, "Please enter a valid email address")
+		return
+	}
+
+	if len(name) > newsletterNameMaxLength {
+		writeJSONError(w, http.StatusBadRequest, "Name is too long")
 		return
 	}
 
@@ -190,26 +235,48 @@ func newsletterSignupHandler(w http.ResponseWriter, r *http.Request) {
 	mailingListAddress := os.Getenv("MAILGUN_LIST_ADDRESS")
 
 	if mailgunDomain == "" || mailgunAPIKey == "" || mailingListAddress == "" {
-		log.Println("Mailgun credentials not configured. Email:", email, "Name:", name)
-		// For development, just log and return success
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]string{"status": "success", "message": "Newsletter signup received!"})
+		log.Println("Mailgun credentials not configured for newsletter signup")
+		writeJSONError(w, http.StatusInternalServerError, "Newsletter signup is currently unavailable")
 		return
 	}
 
 	// Add subscriber to Mailgun mailing list
-	err := addToMailgunList(mailgunAPIKey, mailingListAddress, email, name)
+	err = addToMailgunList(mailgunAPIKey, mailingListAddress, email, name)
 	if err != nil {
 		log.Printf("Failed to add subscriber: %v", err)
-		http.Error(w, "Failed to subscribe to newsletter", http.StatusInternalServerError)
+		writeJSONError(w, http.StatusBadGateway, "Failed to subscribe to newsletter")
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{"status": "success", "message": "Successfully subscribed to Cache Tech Community newsletter!"})
+	writeJSONResponse(w, http.StatusOK, map[string]string{
+		"status":  "success",
+		"message": "Successfully subscribed to Cache Tech Community newsletter!",
+	})
 }
 
 func addToMailgunList(apiKey, listAddress, email, name string) error {
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+	}
+
+	err := addSubscriberToMailgunList(client, apiKey, listAddress, email, name)
+	if err == nil {
+		return nil
+	}
+
+	var mailgunErr *mailgunHTTPError
+	if !errors.As(err, &mailgunErr) || mailgunErr.StatusCode != http.StatusNotFound {
+		return err
+	}
+
+	if createErr := createMailgunList(client, apiKey, listAddress); createErr != nil {
+		return createErr
+	}
+
+	return addSubscriberToMailgunList(client, apiKey, listAddress, email, name)
+}
+
+func addSubscriberToMailgunList(client *http.Client, apiKey, listAddress, email, name string) error {
 	apiURL := fmt.Sprintf("https://api.mailgun.net/v3/lists/%s/members", listAddress)
 
 	data := url.Values{}
@@ -225,7 +292,6 @@ func addToMailgunList(apiKey, listAddress, email, name string) error {
 	req.SetBasicAuth("api", apiKey)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		return err
@@ -235,8 +301,113 @@ func addToMailgunList(apiKey, listAddress, email, name string) error {
 	if resp.StatusCode != http.StatusOK {
 		buf := new(bytes.Buffer)
 		buf.ReadFrom(resp.Body)
-		return fmt.Errorf("mailgun API error: %d - %s", resp.StatusCode, buf.String())
+		return &mailgunHTTPError{StatusCode: resp.StatusCode, Body: buf.String()}
 	}
 
 	return nil
+}
+
+func createMailgunList(client *http.Client, apiKey, listAddress string) error {
+	apiURL := "https://api.mailgun.net/v3/lists"
+
+	data := url.Values{}
+	data.Set("address", listAddress)
+	data.Set("name", "CodeCamp Newsletter")
+	data.Set("description", "CodeCamp newsletter updates")
+	data.Set("access_level", "readonly")
+
+	req, err := http.NewRequest("POST", apiURL, strings.NewReader(data.Encode()))
+	if err != nil {
+		return err
+	}
+
+	req.SetBasicAuth("api", apiKey)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(resp.Body)
+		return &mailgunHTTPError{StatusCode: resp.StatusCode, Body: buf.String()}
+	}
+
+	return nil
+}
+
+type mailgunHTTPError struct {
+	StatusCode int
+	Body       string
+}
+
+func (e *mailgunHTTPError) Error() string {
+	return fmt.Sprintf("mailgun API error: %d - %s", e.StatusCode, e.Body)
+}
+
+func allowNewsletterRequest(ip string) bool {
+	if ip == "" {
+		ip = "unknown"
+	}
+
+	now := time.Now()
+	cutoff := now.Add(-newsletterRateLimitWindow)
+
+	newsletterLimiter.mu.Lock()
+	defer newsletterLimiter.mu.Unlock()
+
+	recent := make([]time.Time, 0, newsletterRateLimitMaxRequests)
+	for _, ts := range newsletterLimiter.requests[ip] {
+		if ts.After(cutoff) {
+			recent = append(recent, ts)
+		}
+	}
+
+	if len(recent) >= newsletterRateLimitMaxRequests {
+		newsletterLimiter.requests[ip] = recent
+		return false
+	}
+
+	newsletterLimiter.requests[ip] = append(recent, now)
+	return true
+}
+
+func clientIP(r *http.Request) string {
+	forwardedFor := strings.TrimSpace(r.Header.Get("X-Forwarded-For"))
+	if forwardedFor != "" {
+		parts := strings.Split(forwardedFor, ",")
+		if len(parts) > 0 {
+			return strings.TrimSpace(parts[0])
+		}
+	}
+
+	realIP := strings.TrimSpace(r.Header.Get("X-Real-IP"))
+	if realIP != "" {
+		return realIP
+	}
+
+	host, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err == nil && host != "" {
+		return host
+	}
+
+	return r.RemoteAddr
+}
+
+func writeJSONError(w http.ResponseWriter, status int, message string) {
+	writeJSONResponse(w, status, map[string]string{
+		"status":  "error",
+		"message": message,
+	})
+}
+
+func writeJSONResponse(w http.ResponseWriter, status int, payload map[string]string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	if err := json.NewEncoder(w).Encode(payload); err != nil {
+		log.Printf("Failed to encode JSON response: %v", err)
+	}
 }
