@@ -23,6 +23,12 @@ tmpl.ExecuteTemplate(w, "base.html", data)
 
 {{define "styles"}}
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap');
+
+    body {
+        font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
     .hero-announcement {
         position: relative;
         isolation: isolate;
@@ -62,7 +68,7 @@ tmpl.ExecuteTemplate(w, "base.html", data)
             radial-gradient(circle at 20% 20%, rgba(90, 125, 255, 0.35), transparent 45%),
             radial-gradient(circle at 80% 80%, rgba(2, 181, 149, 0.25), transparent 40%),
             linear-gradient(rgba(8, 11, 24, 0.7), rgba(8, 11, 24, 0.78)),
-            url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2000&q=80');
+            url('https://images.unsplash.com/photo-1569981889244-a358a2d4427b?q=80&w=1814&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -299,6 +305,56 @@ tmpl.ExecuteTemplate(w, "base.html", data)
         line-height: 1.55 !important;
     }
 
+    .competition-structure {
+        background: #f8fafc;
+        padding: 5rem 0;
+    }
+
+    .competition-structure .container {
+        max-width: 1040px;
+    }
+
+    .competition-structure-grid {
+        margin-top: 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        text-align: left;
+    }
+
+    .competition-structure-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 1.2rem 1.1rem;
+    }
+
+    .competition-structure-card h3 {
+        font-size: 1.06rem !important;
+        color: #0f172a !important;
+        margin-bottom: 0.6rem !important;
+        font-weight: 600 !important;
+    }
+
+    .competition-structure-card p {
+        color: #475569 !important;
+        margin-bottom: 0.75rem !important;
+        font-size: 0.97rem !important;
+        line-height: 1.55 !important;
+    }
+
+    .competition-structure-card ul {
+        margin: 0;
+        padding-left: 1.05rem;
+        color: #475569;
+    }
+
+    .competition-structure-card li {
+        margin-bottom: 0.4rem;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
     @media (max-width: 576px) {
         .hero-newsletter-form {
             grid-template-columns: 1fr;
@@ -317,6 +373,10 @@ tmpl.ExecuteTemplate(w, "base.html", data)
         .event-details-grid {
             grid-template-columns: 1fr;
         }
+
+        .competition-structure-grid {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 {{end}}
@@ -326,8 +386,7 @@ tmpl.ExecuteTemplate(w, "base.html", data)
     <div class="container text-center">
         <p class="hero-kicker">CodeCamp Announcement</p>
         <h1 class="hero-title">CodeCamp: Bridgerland 2026.</h1>
-        <p class="hero-subtitle">Date coming soon.</p>
-        <p class="hero-subtitle">Please check back soon.</p>
+        <p class="hero-subtitle">Date coming soon. (July sometime)</p>
         <p class="hero-subtitle">Join the newsletter to be notified when registration opens.</p>
         <div class="hero-newsletter">
             <form id="hero-newsletter-form" class="hero-newsletter-form" action="/newsletter-signup" method="post">
@@ -406,6 +465,58 @@ tmpl.ExecuteTemplate(w, "base.html", data)
                 <p>Meet local builders, students, and professionals, and leave with new contacts and future
                     collaborators.</p>
             </article>
+            <article class="event-details-card">
+                <h3>Team Structure</h3>
+                <p>Teams are typically 2 to 4 participants, with at least one member available to present the final
+                    demo.</p>
+            </article>
+            <article class="event-details-card">
+                <h3>Event Rules</h3>
+                <p>Projects should be built during the event window, follow the code of conduct, and clearly cite any
+                    third-party assets or AI tools used.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="competition-structure">
+    <div class="container text-center">
+        <p class="about-kicker">Competition Format</p>
+        <h2 class="about-title">Rules, divisions, and teams</h2>
+        <p class="about-copy mx-auto">
+            Based on our previous CodeCamp format, teams compete in a division based on the most experienced team
+            member while following clear project and presentation rules.
+        </p>
+
+        <div class="competition-structure-grid">
+            <article class="competition-structure-card">
+                <h3>Team Setup</h3>
+                <p>You can register solo or with friends. Teams may include up to 4 participants.</p>
+                <ul>
+                    <li>Team size: 1 to 4 members</li>
+                    <li>Cross-skill teams are encouraged</li>
+                    <li>At least one member should present the final demo</li>
+                </ul>
+            </article>
+            <article class="competition-structure-card">
+                <h3>Divisions</h3>
+                <p>Teams are placed into one division according to the most experienced member.</p>
+                <ul>
+                    <li>K-12 Students</li>
+                    <li>Collegiate Participants</li>
+                    <li>Independent Developers</li>
+                    <li>Industry Professionals</li>
+                </ul>
+            </article>
+            <article class="competition-structure-card">
+                <h3>Core Rules</h3>
+                <p>Projects should be fair, transparent, and completed primarily during the event window.</p>
+                <ul>
+                    <li>Follow the event code of conduct</li>
+                    <li>Cite external assets, APIs, and AI-assisted work</li>
+                    <li>Keep projects respectful, legal, and original</li>
+                </ul>
+            </article>
         </div>
     </div>
 </section>
@@ -430,6 +541,16 @@ tmpl.ExecuteTemplate(w, "base.html", data)
             <article class="faq-item">
                 <h3>What should I bring?</h3>
                 <p>Bring a laptop, charger, and your curiosity. Project prompts and support will be provided.</p>
+            </article>
+            <article class="faq-item">
+                <h3>How are teams organized?</h3>
+                <p>Most teams have up to 4 people. You can join with friends or register solo and we will help place
+                    you.</p>
+            </article>
+            <article class="faq-item">
+                <h3>What are the main project rules?</h3>
+                <p>Keep projects respectful and legal, build primarily during the event, and disclose external code,
+                    APIs, and generated assets in your demo notes.</p>
             </article>
         </div>
     </div>
