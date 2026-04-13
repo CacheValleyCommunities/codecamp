@@ -328,14 +328,14 @@ tmpl.ExecuteTemplate(w, "base.html", data)
         <h1 class="hero-title">CodeCamp: Bridgerland 2026.</h1>
         <p class="hero-subtitle">Date coming soon.</p>
         <p class="hero-subtitle">Please check back soon.</p>
+        <p class="hero-subtitle">Join the newsletter to be notified when registration opens.</p>
         <div class="hero-newsletter">
             <form id="hero-newsletter-form" class="hero-newsletter-form" action="/newsletter-signup" method="post">
                 <input type="email" id="hero-newsletter-email" name="email" class="form-control"
                     placeholder="Email address" autocomplete="email" required>
                 <input type="text" id="hero-newsletter-name" name="name" class="form-control"
                     placeholder="Name (optional)" autocomplete="name">
-                <input type="text" name="website" tabindex="-1" autocomplete="off" class="d-none"
-                    aria-hidden="true">
+                <input type="text" name="website" tabindex="-1" autocomplete="off" class="d-none" aria-hidden="true">
                 <button type="submit" class="btn btn-primary">
                     <span class="hero-newsletter-button-text">Notify Me</span>
                 </button>
@@ -394,7 +394,8 @@ tmpl.ExecuteTemplate(w, "base.html", data)
             </article>
             <article class="event-details-card">
                 <h3>Mentor Support</h3>
-                <p>Experienced developers and volunteers are available throughout the event to unblock teams quickly.</p>
+                <p>Experienced developers and volunteers are available throughout the event to unblock teams quickly.
+                </p>
             </article>
             <article class="event-details-card">
                 <h3>Friendly Competition</h3>
@@ -402,7 +403,8 @@ tmpl.ExecuteTemplate(w, "base.html", data)
             </article>
             <article class="event-details-card">
                 <h3>Community Connections</h3>
-                <p>Meet local builders, students, and professionals, and leave with new contacts and future collaborators.</p>
+                <p>Meet local builders, students, and professionals, and leave with new contacts and future
+                    collaborators.</p>
             </article>
         </div>
     </div>
