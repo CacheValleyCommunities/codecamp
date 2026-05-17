@@ -1,205 +1,126 @@
 {{define "title"}}Past Winners - CodeCamp: Bridgerland{{end}}
 
 {{define "content"}}
-<section class="hero-section" style="min-height: 60vh;">
-    <div class="container">
-        <div class="row justify-content-center text-center">
-            <div class="col-lg-8">
-                <h1 class="display-2 text-white mb-5">Past Winners</h1>
-                <p class="lead text-white mb-0" style="opacity: 0.9;">Celebrating our inaugural year and looking forward
-                    to
-                    future competitions</p>
-            </div>
+{{template "page-hero" dict "Kicker" "History" "Title" "Past Winners" "Subtitle" "Celebrating our inaugural year and looking forward to future competitions"}}
+
+<section class="about-blurb">
+    <div class="container text-center">
+        <p class="about-kicker">2024</p>
+        <h2 class="about-title">Our inaugural year</h2>
+        <p class="about-copy mx-auto">CodeCamp Bridgerland's first year was a tremendous success! With <strong>23
+                participants</strong> across multiple categories, we saw incredible innovation and creativity from our
+            local tech community.</p>
+
+        <div class="event-details-grid two-col mt-4">
+            <article class="competition-structure-card text-start">
+                <h3>Event Statistics</h3>
+                <ul>
+                    <li><strong>23</strong> total participants</li>
+                    <li><strong>5</strong> amazing sponsors</li>
+                    <li><strong>5</strong> competition categories</li>
+                    <li><strong>4</strong> skill divisions</li>
+                </ul>
+            </article>
+            <article class="competition-structure-card text-start">
+                <h3>Competition Categories</h3>
+                <ul>
+                    <li>App Development</li>
+                    <li>Game Development</li>
+                    <li>Maker Projects</li>
+                    <li>AI Solutions</li>
+                    <li>Scratch Programming</li>
+                </ul>
+            </article>
+        </div>
+
+        <article class="minor-policy-callout mt-4 text-start">
+            <h3>Recognition & Awards</h3>
+            <p>While we're keeping the specific winners private to respect their privacy, we're incredibly proud of
+                all participants who brought their innovative ideas to life during our 24-hour hackathon.</p>
+            <p class="mb-0">Every participant received recognition for their hard work, creativity, and dedication.</p>
+        </article>
+
+        <div class="event-details-grid four-col mt-4">
+            <article class="event-details-card text-center">
+                <h3>DayCamp</h3>
+                <p>Beginners</p>
+            </article>
+            <article class="event-details-card text-center">
+                <h3>Rookie</h3>
+                <p>New coders</p>
+            </article>
+            <article class="event-details-card text-center">
+                <h3>Novice</h3>
+                <p>Intermediate</p>
+            </article>
+            <article class="event-details-card text-center">
+                <h3>Industry</h3>
+                <p>Professionals</p>
+            </article>
         </div>
     </div>
 </section>
 
-<div class="content-section">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <!-- 2024 - Our First Year -->
-                <div class="mb-7 text-center">
-                    <div class="d-flex align-items-center justify-content-center mb-6">
-                        <h2 class="display-5 mb-0 me-3">2024 - Our Inaugural Year</h2>
-                        <span class="badge bg-success rounded-pill px-3 py-2">🎉 First Ever!</span>
-                    </div>
-
-                    <div class="row justify-content-center">
-                        <div class="col-lg-8">
-                            <div class="bg-gray-50 p-7 rounded-5 shadow-soft">
-                                <div class="mb-5" style="font-size: 4rem;">🎯</div>
-                                <h3 class="mb-5">A Successful Beginning</h3>
-                                <p class="lead mb-6">
-                                    CodeCamp Bridgerland's first year was a tremendous success! With <strong>23
-                                        participants</strong> across multiple categories,
-                                    we saw incredible innovation and creativity from our local tech community.
-                                </p>
-
-                                <div class="row g-5 mb-5">
-                                    <div class="col-md-6">
-                                        <div class="card-modern bg-white p-5">
-                                            <h5 class="mb-4">📊 Event Statistics</h5>
-                                            <ul class="list-unstyled">
-                                                <li class="mb-3">🧑‍💻 <strong>23</strong> total participants</li>
-                                                <li class="mb-3">🏢 <strong>5</strong> amazing sponsors</li>
-                                                <li class="mb-3">🎯 <strong>5</strong> competition categories</li>
-                                                <li class="mb-0">⭐ <strong>4</strong> skill divisions</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="bg-white p-4 rounded-3">
-                                            <h5 class="mb-3">🏆 Competition Categories</h5>
-                                            <ul class="list-unstyled">
-                                                <li class="mb-2">📱 <strong>App</strong> Development</li>
-                                                <li class="mb-2">🎮 <strong>Game</strong> Development</li>
-                                                <li class="mb-2">🔧 <strong>Maker</strong> Projects</li>
-                                                <li class="mb-2">🤖 <strong>AI</strong> Solutions</li>
-                                                <li class="mb-0">🎨 <strong>Scratch</strong> Programming</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="bg-primary bg-opacity-10 p-4 rounded-3 mb-4">
-                                    <h5 class="mb-3">�️ Recognition & Awards</h5>
-                                    <p class="mb-3">
-                                        While we're keeping the specific winners private to respect their privacy,
-                                        we're incredibly proud of all participants who brought their innovative ideas to
-                                        life during our 24-hour hackathon.
-                                    </p>
-                                    <p class="mb-0">
-                                        Every participant received recognition for their hard work, creativity, and
-                                        dedication to learning and building something amazing!
-                                    </p>
-                                </div>
-
-                                <div class="row g-3">
-                                    <div class="col-md-3 col-6">
-                                        <div class="text-center p-3 border rounded-3">
-                                            <div class="mb-2" style="font-size: 1.5rem;">🏕️</div>
-                                            <h6>DayCamp</h6>
-                                            <small class="text-muted">Beginners</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-6">
-                                        <div class="text-center p-3 border rounded-3">
-                                            <div class="mb-2" style="font-size: 1.5rem;">🌱</div>
-                                            <h6>Rookie</h6>
-                                            <small class="text-muted">New coders</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-6">
-                                        <div class="text-center p-3 border rounded-3">
-                                            <div class="mb-2" style="font-size: 1.5rem;">⚡</div>
-                                            <h6>Novice</h6>
-                                            <small class="text-muted">Intermediate</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-6">
-                                        <div class="text-center p-3 border rounded-3">
-                                            <div class="mb-2" style="font-size: 1.5rem;">🏭</div>
-                                            <h6>Industry</h6>
-                                            <small class="text-muted">Professionals</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Looking Forward -->
-                <div class="mb-5">
-                    <h3 class="display-6 mb-4 text-center">Looking Forward to Future Events</h3>
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <div class="bg-white p-4 rounded-3 h-100 shadow-sm">
-                                <h5 class="mb-3">🚀 Growing the Community</h5>
-                                <p class="mb-0">
-                                    Based on the success of our first year, we're planning to expand CodeCamp
-                                    Bridgerland
-                                    to include more participants, additional categories, and enhanced prizes for future
-                                    competitions.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="bg-white p-4 rounded-3 h-100 shadow-sm">
-                                <h5 class="mb-3">🎯 Enhanced Experience</h5>
-                                <p class="mb-0">
-                                    We're working on improving workshops, mentorship opportunities, and networking
-                                    sessions
-                                    to create an even better experience for all skill levels in our community.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Competition Categories -->
-                <div class="mb-5">
-                    <h3 class="display-6 mb-4 text-center">Our Competition Categories</h3>
-                    <p class="text-center lead mb-4">These are the categories where our participants showcase their
-                        creativity and technical skills:</p>
-                    <div class="row g-3">
-                        <div class="col-md-6 col-lg-3">
-                            <div class="text-center p-4 bg-light rounded-3 h-100">
-                                <div class="mb-3" style="font-size: 2.5rem;">📱</div>
-                                <h5>App Development</h5>
-                                <p class="small text-muted mb-0">Mobile or web applications that solve real-world
-                                    problems</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-3">
-                            <div class="text-center p-4 bg-light rounded-3 h-100">
-                                <div class="mb-3" style="font-size: 2.5rem;">🎮</div>
-                                <h5>Game Development</h5>
-                                <p class="small text-muted mb-0">Video games and interactive entertainment experiences
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-3">
-                            <div class="text-center p-4 bg-light rounded-3 h-100">
-                                <div class="mb-3" style="font-size: 2.5rem;">🔧</div>
-                                <h5>Maker Projects</h5>
-                                <p class="small text-muted mb-0">Hardware projects and IoT solutions that bridge digital
-                                    and physical worlds</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-3">
-                            <div class="text-center p-4 bg-light rounded-3 h-100">
-                                <div class="mb-3" style="font-size: 2.5rem;">🤖</div>
-                                <h5>AI Solutions</h5>
-                                <p class="small text-muted mb-0">Artificial intelligence and machine learning
-                                    applications</p>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="text-center p-4 bg-light rounded-3">
-                                <div class="mb-3" style="font-size: 2.5rem;">🎨</div>
-                                <h5>Scratch Programming</h5>
-                                <p class="small text-muted mb-0">Visual programming projects perfect for beginners and
-                                    creative storytelling</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-center">
-                    <h3 class="h2 mb-4">Want to Compete?</h3>
-                    <p class="lead mb-4">Join us at the next CodeCamp and showcase your skills alongside Cache Valley's
-                        most talented developers!</p>
-                    <div class="d-flex flex-column flex-md-row gap-3 justify-content-center">
-                        <a href="/rules" class="btn btn-primary btn-lg">Competition Rules</a>
-                        <a href="/" class="btn btn-outline-primary btn-lg">Learn More</a>
-                    </div>
-                </div>
-            </div>
+<section class="event-details">
+    <div class="container text-center">
+        <p class="about-kicker">Future</p>
+        <h2 class="about-title">Looking forward</h2>
+        <div class="competition-structure-grid two-col">
+            <article class="competition-structure-card">
+                <h3>Growing the Community</h3>
+                <p>Based on the success of our first year, we're planning to expand CodeCamp Bridgerland with more
+                    participants, categories, and enhanced prizes.</p>
+            </article>
+            <article class="competition-structure-card">
+                <h3>Enhanced Experience</h3>
+                <p>We're improving workshops, mentorship opportunities, and networking sessions for all skill levels.
+                </p>
+            </article>
         </div>
     </div>
-    </section>
-    {{end}}
+</section>
 
-    {{template "base.html" .}}
+<section class="categories-section">
+    <div class="container text-center">
+        <p class="about-kicker">Categories</p>
+        <h2 class="about-title">Competition categories</h2>
+        <div class="categories-grid">
+            <article class="category-card">
+                <h3>App</h3>
+                <p>Mobile or web applications that solve real-world problems</p>
+            </article>
+            <article class="category-card">
+                <h3>Game</h3>
+                <p>Video games and interactive entertainment experiences</p>
+            </article>
+            <article class="category-card">
+                <h3>Maker</h3>
+                <p>Hardware projects and IoT solutions</p>
+            </article>
+            <article class="category-card">
+                <h3>AI</h3>
+                <p>Artificial intelligence and machine learning applications</p>
+            </article>
+            <article class="category-card">
+                <h3>Scratch</h3>
+                <p>Visual programming projects for beginners</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="page-cta">
+    <div class="container">
+        <p class="about-kicker">Compete</p>
+        <h2 class="about-title">Want to compete?</h2>
+        <p class="about-copy mx-auto text-center">Join us at the next CodeCamp and showcase your skills alongside Cache
+            Valley's most talented developers!</p>
+        <div class="d-flex flex-column flex-md-row gap-3 justify-content-center">
+            <a href="/rules" class="btn btn-primary btn-lg">Competition Rules</a>
+            <a href="/" class="btn btn-outline-primary btn-lg">Learn More</a>
+        </div>
+    </div>
+</section>
+{{end}}
+
+{{template "base.html" .}}

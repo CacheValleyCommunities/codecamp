@@ -1,0 +1,45 @@
+{{define "contact-form"}}
+<form id="contact-form" class="contact-form" action="/contact-submit" method="post" novalidate>
+    <input type="hidden" name="type" value="{{.ContactType}}">
+    <input type="text" name="website" tabindex="-1" autocomplete="off" class="contact-form-honeypot" aria-hidden="true">
+
+    <div class="mb-3">
+        <label for="contact-name" class="form-label">Name <span class="text-danger">*</span></label>
+        <input type="text" id="contact-name" name="name" class="form-control" required maxlength="120">
+    </div>
+
+    <div class="mb-3">
+        <label for="contact-email" class="form-label">Email <span class="text-danger">*</span></label>
+        <input type="email" id="contact-email" name="email" class="form-control" required>
+    </div>
+
+    {{if eq .ContactType "sponsor"}}
+    <div class="mb-3">
+        <label for="contact-company" class="form-label">Company</label>
+        <input type="text" id="contact-company" name="company" class="form-control" maxlength="200">
+    </div>
+    {{end}}
+
+    {{if eq .ContactType "volunteer"}}
+    <div class="mb-3">
+        <label for="contact-role" class="form-label">Role / interest</label>
+        <input type="text" id="contact-role" name="role" class="form-control" maxlength="200"
+            placeholder="e.g. mentor, judge, setup">
+    </div>
+    {{end}}
+
+    <div class="mb-4">
+        <label for="contact-message" class="form-label">Message <span class="text-danger">*</span></label>
+        <textarea id="contact-message" name="message" class="form-control" rows="6" required maxlength="5000"></textarea>
+    </div>
+
+    <div class="mb-4 contact-altcha-wrap">
+        <altcha-widget id="contact-altcha" name="altcha" challengeurl="/altcha/challenge" hidefooter></altcha-widget>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-lg w-100">
+        <span class="contact-form-button-text">Send message</span>
+    </button>
+    <div id="contact-form-alert" class="alert mt-3 d-none" role="status" aria-live="polite"></div>
+</form>
+{{end}}

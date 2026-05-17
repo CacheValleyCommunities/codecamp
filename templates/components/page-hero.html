@@ -1,0 +1,9 @@
+{{define "page-hero"}}
+<section class="hero-announcement page-hero">
+    <div class="container text-center">
+        <p class="hero-kicker">{{.Kicker}}</p>
+        <h1 class="hero-title">{{.Title}}</h1>
+        {{if .Subtitle}}<p class="hero-subtitle">{{.Subtitle}}</p>{{end}}
+    </div>
+</section>
+{{end}}

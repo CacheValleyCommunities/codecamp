@@ -1,0 +1,100 @@
+{{define "title"}}{{.Title}}{{end}}
+
+{{define "content"}}
+{{template "page-hero" dict "Kicker" .HeroKicker "Title" .HeroTitle "Subtitle" .HeroSubtitle}}
+
+<section class="contact-form-section">
+    <div class="container">
+        <div class="contact-form-card mx-auto">
+            {{template "contact-form" .}}
+        </div>
+    </div>
+</section>
+{{end}}
+
+{{define "scripts"}}
+<script src="/public/js/altcha.min.js" type="module"></script>
+<script>
+    (() => {
+        const form = document.getElementById("contact-form");
+        if (!form) return;
+
+        const alertEl = document.getElementById("contact-form-alert");
+        const altchaWidget = document.getElementById("contact-altcha");
+        const submitButton = form.querySelector("button[type='submit']");
+        const buttonText = form.querySelector(".contact-form-button-text");
+
+        const setMessage = (text, isError) => {
+            if (!alertEl) return;
+            alertEl.textContent = text;
+            alertEl.classList.remove("d-none", "alert-success", "alert-danger");
+            alertEl.classList.add(isError ? "alert-danger" : "alert-success");
+        };
+
+        const getAltchaPayload = () => {
+            if (!altchaWidget) return "";
+            if (altchaWidget.value) return altchaWidget.value;
+            const named = form.elements.namedItem("altcha");
+            if (named?.value) return named.value;
+            const hidden = altchaWidget.querySelector('input[name="altcha"]');
+            return hidden?.value || "";
+        };
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            if (!submitButton || !buttonText) return;
+
+            const altchaPayload = getAltchaPayload();
+            if (!altchaPayload) {
+                setMessage("Please complete the verification check.", true);
+                return;
+            }
+
+            submitButton.disabled = true;
+            buttonText.textContent = "Sending...";
+
+            try {
+                const formData = new FormData(form);
+                formData.set("altcha", altchaPayload);
+
+                const response = await fetch("/contact-submit", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                let payload = null;
+                const contentType = response.headers.get("Content-Type") || "";
+                if (contentType.includes("application/json")) {
+                    payload = await response.json();
+                } else {
+                    const text = await response.text();
+                    payload = { message: text };
+                }
+
+                if (!response.ok) {
+                    throw new Error(payload.message || "Unable to send your message. Please try again.");
+                }
+
+                setMessage(payload.message || "Thanks for reaching out! We'll get back to you soon.", false);
+                const typeInput = form.querySelector('input[name="type"]');
+                const typeValue = typeInput ? typeInput.value : "";
+                form.reset();
+                if (typeInput && typeValue) {
+                    typeInput.value = typeValue;
+                }
+                if (typeof altchaWidget?.reset === "function") {
+                    altchaWidget.reset();
+                }
+            } catch (error) {
+                setMessage(error.message || "Unable to send your message. Please try again.", true);
+            } finally {
+                submitButton.disabled = false;
+                buttonText.textContent = "Send message";
+            }
+        });
+    })();
+</script>
+{{end}}
+
+{{template "base.html" .}}
